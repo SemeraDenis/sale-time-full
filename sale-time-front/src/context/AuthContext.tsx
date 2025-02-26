@@ -19,6 +19,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     const [user, setUser] = useState<{ username: string } | null>(() => parseToken(token));
 
     const login = (token: string) => {
+        console.log(token);
         Cookies.set("token", token, { secure: true, sameSite: "strict" });
 
         setUser(parseToken(token));

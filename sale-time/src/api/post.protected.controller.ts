@@ -12,7 +12,7 @@ import { ChangePostStateRequestDto } from '../dto/change-post-state.dto';
 @Controller('protected/posts')
 export class PostProtectedController {
   constructor(
-    @Inject('PostService') private readonly postService: PostService
+    @Inject('PostService') private readonly postService: PostService,
   ) {}
 
   @Post('create')
@@ -23,12 +23,9 @@ export class PostProtectedController {
       @Req() req: Request,
       @Res() res: Response,
   ): Promise<void> {
+
     const userId = JwtUserUtils.getUserInfo(req).id;
-
-    console.log('Полученные файлы:', images);
-    console.log('Полученные данные:', request);
-
-    await this.postService.create(userId, request);
+    await this.postService.create(userId, request, images);
 
     res.status(201).json({ message: 'Post successfully created' });
   }
