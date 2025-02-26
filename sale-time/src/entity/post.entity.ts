@@ -20,14 +20,12 @@ export class Post extends PersistentEntity {
   @Column()
   price: number;
 
-  @ManyToOne(() => User, { eager: true })
-  @JoinColumn({ name: 'ownerId' })
-  owner: User;
+  @Column()
+  ownerId: number;
 
   @Column({ type: 'enum', enum: PostState, default: PostState.ACTIVE })
   status: PostState;
 
-  @ManyToOne(() => PostCategory, { eager: true })
-  @JoinColumn({ name: 'categoryId' })
-  category: PostCategory;
+  @Column()
+  categoryId: number;
 }

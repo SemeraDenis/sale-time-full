@@ -5,7 +5,7 @@ import { PostModule } from './post.module';
 import { OfferModule } from './offer.protected.module';
 import { PostProtectedModule } from './post.protected.module';
 import { JwtAuthenticationMiddleware } from '../middleware/jwt-auth.middleware';
-import {DictionaryModule} from "./dictionary.module";
+import {DictionaryModule} from "./category.module";
 
 @Module({
   imports: [

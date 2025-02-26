@@ -14,5 +14,6 @@ import {DictionaryController} from "../api/dictionary.controller";
         DefaultCategoryService,
     ],
     controllers: [DictionaryController],
+    exports: ['CategoryService']
 })
 export class DictionaryModule {}

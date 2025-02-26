@@ -13,12 +13,13 @@ export class PostEntityBuilder {
     this._post.title = dto.title;
     this._post.description = dto.description;
     this._post.price = dto.price;
+    this._post.categoryId = dto.category;
 
     return this;
   }
 
-  withUser(user: User ): PostEntityBuilder{
-    this._post.owner = user;
+  withUser(userId: number ): PostEntityBuilder{
+    this._post.ownerId = userId;
 
     return this;
   }

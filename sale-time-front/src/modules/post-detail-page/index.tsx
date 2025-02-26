@@ -44,11 +44,16 @@ const PostDetails = () => {
                             {post.images && post.images.length > 0 && (
                                 <CardMedia
                                     component="img"
-                                    height="100%"
                                     image={post.images[0]}
                                     alt={post.title}
-                                    style={{ objectFit: "cover" }}
+                                    sx={{
+                                        width: "100%",
+                                        height: "auto",
+                                        maxHeight: { xs: "250px", md: "400px" },
+                                        objectFit: "contain"
+                                    }}
                                 />
+
                             )}
                         </Grid>
                         <Grid item xs={12} md={4}>
@@ -56,10 +61,15 @@ const PostDetails = () => {
                                 <Typography sx={{ fontSize: "0.750rem", color: "gray", padding:"5px 0 5px 0" }}>{t("published")} {new Date(post.created).toLocaleDateString("ru-RU")}</Typography>
                                 <Typography variant="h4">{post.title}</Typography>
                                 <Typography variant="h6" color="primary">{new Intl.NumberFormat("ru-RU").format(post.price)} ₸</Typography>
-                                <Typography variant="body1" sx={{ mt: 2 }}>{post.description}</Typography>
                             </CardContent>
                         </Grid>
                     </Grid>
+                </Card>
+                <Card sx={{ mt: 2, padding: 2 }}>
+                    <CardContent>
+                        <Typography variant="h6">{t("description")}</Typography>
+                        <Typography variant="body1" sx={{ mt: 1 }}>{post.description}</Typography>
+                    </CardContent>
                 </Card>
             </Container>
             <Footer />

@@ -17,22 +17,13 @@ export class DefaultPostService implements PostService {
     private readonly dataSource: DataSource,
 
     @InjectRepository(Post)
-    private readonly postsRepository: Repository<Post>,
-
-    @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
-
+    private readonly postsRepository: Repository<Post>
   ) {}
 
   async create(currentUserId: number, dto: CreatePostRequestDto): Promise<void> {
-    const user = await this.usersRepository.findOne({ where: { id: currentUserId } });
-    if (!user) {
-      throw new CommonUnauthorizedException('User not found');
-    }
-
     const newPostEntity = new PostEntityBuilder()
       .withDto(dto)
-      .withUser(user)
+      .withUser(currentUserId)
       .getResult();
 
     await this.postsRepository.save(newPostEntity);
@@ -77,7 +68,7 @@ export class DefaultPostService implements PostService {
   async changeState(id: number, currentUserId: number, status: PostState): Promise<void> {
     let post = await this.getPostByIdOrThrow(id);
 
-    if (post.owner.id != currentUserId)
+    if (post.ownerId != currentUserId)
       throw new CommonForbiddenException('Post is not available');
 
     post.status = status;

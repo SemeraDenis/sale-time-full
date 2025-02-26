@@ -41,5 +41,6 @@
   "create-post-price": "Price",
   "create-post-images": "Load images",
   "create-post-do-create": "CREATE",
-  "my-posts": "My posts"
+  "my-posts": "My posts",
+  "description": "Description"
 }

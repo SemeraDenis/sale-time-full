@@ -15,7 +15,7 @@ interface PostFormData {
     description: string;
     price: number;
     images: (File | null)[];
-    category: string;
+    category: number;
 }
 
 // Валидация
@@ -29,7 +29,7 @@ const schema = yup.object({
         .max(5, "Можно загрузить не более 5 фото")
         .required("Файл обязателен"), // Указываем required на весь массив
 
-    category: yup.string().required("Выберите категорию"),
+    category: yup.number().required("Выберите категорию"),
 });
 
 
@@ -77,7 +77,7 @@ const PostCreateForm = () => {
             formData.append("title", data.title);
             formData.append("description", data.description);
             formData.append("price", data.price.toString());
-            formData.append("category", data.category);
+            formData.append("category", data.category.toString());
 
             data.images.forEach((file, index) => {
                 if (file) {
@@ -142,7 +142,7 @@ const PostCreateForm = () => {
                     <InputLabel>{t("create-post-category")}</InputLabel>
                     <Select {...register("category")} error={!!errors.category}>
                         {categories.map((category) => (
-                            <MenuItem key={category.id} value={category.name}>{category.name}</MenuItem>
+                            <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>

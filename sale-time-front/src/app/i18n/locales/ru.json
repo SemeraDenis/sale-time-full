@@ -30,5 +30,6 @@
   "create-post-price": "Цена",
   "create-post-images": "Загрузить изображения",
   "create-post-do-create": "СОЗДАТЬ",
-  "my-posts": "Мои объявления"
+  "my-posts": "Мои объявления",
+  "description": "Описание"
 }

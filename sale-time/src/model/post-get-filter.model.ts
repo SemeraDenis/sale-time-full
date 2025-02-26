@@ -7,7 +7,7 @@ export class PagedPostListFilterModel {
 }
 
 export class PagedPostListFilterModelBuilder{
-  private model:PagedPostListFilterModel;
+  private readonly model:PagedPostListFilterModel;
 
   constructor() {
     this.model = new PagedPostListFilterModel();
