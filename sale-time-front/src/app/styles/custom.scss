@@ -1,0 +1,52 @@
+@import "reset";
+@import "colors-variables";
+@import "text-variables";
+@import "variables";
+
+html {
+    min-block-size: 100vh;
+    scroll-behavior: smooth;
+    text-rendering: optimizeSpeed;
+    background: $gray-100;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+
+    margin: 0 auto;
+}
+
+.header-row {
+    background: $gray-600;
+    font-size: 1.4rem;
+}
+
+.header-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.header-row a{
+    color: $gray-100;
+}
+
+.right-section span {
+    color: $gray-100;
+    padding: 15px;
+}
+
+.categories-section{
+    background: $gray-300;
+}
+.categories-section-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 10px 0 20px;
+}
