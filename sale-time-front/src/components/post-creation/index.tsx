@@ -8,7 +8,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import ApiRoutes from "../../services/api-routes";
 import api from "../../services/api";
-import Category from "../../services/dto/category";
+
+interface Category {
+    id: number;
+    name: string;
+}
 
 interface PostFormData {
     title: string;

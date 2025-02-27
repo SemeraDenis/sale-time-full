@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import { Button, Container, Box, CircularProgress, Stack } from "@mui/material";
 import ApiRoutes from "../../services/api-routes";
-import Category from "../../services/dto/category";
+
+interface Category {
+    id: number;
+    name: string;
+}
 
 interface CategorySectionProps {
     onCategorySelect: (category: number) => void;

@@ -8,10 +8,10 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    const token = Cookies.get('token');
+    const token = Cookies.get('st_auth_token');
 
     if (token && config.headers) {
-        config.headers['token'] = `${token}`;
+        config.headers['st_auth_token'] = `${token}`;
     }
 
     config.headers["Accept-Language"] = i18n.language;

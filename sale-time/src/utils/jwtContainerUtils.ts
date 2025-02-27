@@ -2,7 +2,7 @@ import { User } from "../entity/user.entity";
 import { signJWT } from "./jwt.utils";
 import { Request, Response } from "express";
 
-const tokenContainerName = "token";
+const tokenContainerName = "st_auth_token";
 
 export class JwtContainerUtils {
   static getToken(req: Request):string {

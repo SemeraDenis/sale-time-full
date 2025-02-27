@@ -1,6 +1,9 @@
 import * as jwt from 'jsonwebtoken'
+import * as dotenv from 'dotenv';
 
-const SECRET_KEY = 'SALE-TIME-JWT_SECRET_KEY';
+dotenv.config();
+
+const SECRET_KEY = process.env.JWT_SECRET;
 
 export function signJWT(payload: any) {
   return jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
