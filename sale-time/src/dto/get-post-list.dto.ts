@@ -24,4 +24,11 @@ export class PostSummaryDto {
   price: number;
   description: string;
   images: number[];
+  seller: SellerInfoDto;
+}
+
+export class SellerInfoDto {
+  id: number;
+  fullName: string;
+  phoneNumber: string;
 }

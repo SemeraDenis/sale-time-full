@@ -9,13 +9,13 @@ import {
 } from '@nestjs/common';
 import { PostService } from '../service/post.service';
 import {PostImageService} from "../service/post-image.service";
+import {UserService} from "../service/user.service";
 
 import {
-  PreviewPostListDto, PostPreviewDto, PostSummaryDto,
+  PreviewPostListDto, PostSummaryDto,
   PostListFilterRequestDto,
 } from '../dto/get-post-list.dto';
 
-import { Post as PostEntity } from '../entity/post.entity';
 
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PagedPostListFilterModelBuilder } from '../model/post-get-filter.model';
@@ -25,11 +25,13 @@ import {CommonNotfoundException} from "../errors/exceptions/common.notfound-exce
 
 
 
+
 @Controller()
 export class PostController {
   constructor(
     @Inject('PostService') private readonly postService: PostService,
     @Inject('PostImageService') private readonly postImageService: PostImageService,
+    @Inject('UserService') private readonly userService: UserService,
   ) {
   }
 
@@ -51,7 +53,7 @@ export class PostController {
 
     const posts = await this.postService.getPosts(filterParam);
 
-    const postMapper: PostDtoMapper = new PostDtoMapper(this.postImageService);
+    const postMapper: PostDtoMapper = new PostDtoMapper(this.postImageService, this.userService);
     const resultDto = new PreviewPostListDto();
     resultDto.totalCount = posts.totalCount;
     resultDto.totalPageCount = Math.ceil(resultDto.totalCount / pageSize);
@@ -71,6 +73,6 @@ export class PostController {
     if (!post)
       throw new CommonNotfoundException('Post not found');
 
-    return await new PostDtoMapper(this.postImageService).toPostSummaryDto(post);
+    return await new PostDtoMapper(this.postImageService, this.userService).toPostSummaryDto(post);
   }
 }

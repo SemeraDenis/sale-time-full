@@ -10,6 +10,7 @@ export class UserBuilder {
     user.password = await PasswordUtils.hashPassword(dto.password);
     user.fullName = dto.fullName;
     user.email = dto.email;
+    user.phone = dto.phone;
 
     return user;
   }

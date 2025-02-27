@@ -8,18 +8,24 @@ import Footer from "../footer";
 import Header from "../header";
 import { useTranslation } from "react-i18next";
 
-interface PostDetails {
+interface SellerInfo {
+    id: number;
+    fullName: string;
+    phoneNumber: string;
+}
+interface PostSummaryInfo {
     id: number;
     published: Date;
     title: string;
     description: string;
     price: number;
     images: number[];
+    seller: SellerInfo;
 }
 
 const PostDetails = () => {
     const { id } = useParams();
-    const [post, setPost] = useState<PostDetails>();
+    const [post, setPost] = useState<PostSummaryInfo>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { t } = useTranslation();
@@ -72,21 +78,37 @@ const PostDetails = () => {
                             )}
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <CardContent>
-                                <Typography sx={{ fontSize: "0.750rem", color: "gray", padding: "5px 0 5px 0" }}>
-                                    {t("published")} {new Date(post.published).toLocaleDateString("ru-RU")}
-                                </Typography>
-                                <Typography variant="h4">{post.title}</Typography>
-                                <Typography variant="h6" color="primary">
-                                    {new Intl.NumberFormat("ru-RU").format(post.price)} ₸
-                                </Typography>
-                            </CardContent>
+                            <Card sx={{ mt: 2, p: 2 }}>
+                                <CardContent>
+                                    <Typography sx={{ fontSize: "0.750rem", color: "gray", padding: "5px 0 5px 0" }}>
+                                        {t("published")} {new Date(post.published).toLocaleDateString("ru-RU")}
+                                    </Typography>
+                                    <Typography variant="h4">{post.title}</Typography>
+                                    <Typography variant="h6" color="primary">
+                                        {new Intl.NumberFormat("ru-RU").format(post.price)} ₸
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+
+                            {post.seller && (
+                                <Card sx={{ mt: 2, p: 2 }}>
+                                    <CardContent>
+                                        <Typography sx={{ fontSize: "0.750rem", color: "gray", padding: "5px 0 5px 0" }}>
+                                            {t("seller_info")}
+                                        </Typography>
+                                        <Typography variant="h4">{post.seller.fullName}</Typography>
+                                        <Typography variant="h6" color="primary">{post.seller.phoneNumber}</Typography>
+                                    </CardContent>
+                                </Card>
+                            )}
                         </Grid>
+
                     </Grid>
                 </Card>
+
                 <Card sx={{ mt: 2, padding: 2 }}>
                     <CardContent>
-                        <Typography variant="h6">{t("description")}</Typography>
+                        <Typography variant="h4"><strong>{t("description")}</strong></Typography>
                         <Typography variant="body1" sx={{ mt: 1 }}>{post.description}</Typography>
                     </CardContent>
                 </Card>

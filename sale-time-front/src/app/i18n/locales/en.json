@@ -20,6 +20,7 @@
   "registerPageTitle": "Registration",
   "logout": "Logout",
   "email": "E-mail",
+  "phone": "Phone number",
   "fullName": "Name",
   "authPageTitle": "Authentication",
   "login": "Login",
@@ -42,5 +43,6 @@
   "create-post-images": "Load images",
   "create-post-do-create": "CREATE",
   "my-posts": "My posts",
-  "description": "Description"
+  "description": "Description",
+  "seller_info": "Seller"
 }

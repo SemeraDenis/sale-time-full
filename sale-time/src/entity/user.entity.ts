@@ -17,4 +17,7 @@ export class User extends PersistentEntity {
 
   @Column()
   email: string;
+
+  @Column()
+  phone: string;
 }

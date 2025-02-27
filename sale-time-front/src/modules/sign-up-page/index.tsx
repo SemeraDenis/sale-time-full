@@ -15,6 +15,7 @@ import ApiRoutes from "../../services/api-routes";
 const schema = yup.object().shape({
     fullName: yup.string().required("Введите Имя"),
     email: yup.string().email("Заполните email").required("Заполните email"),
+    phone: yup.string().min(4, "Минимум 11 символов").required("Заполните номер телефона"),
     login: yup.string().min(4, "Минимум 4 символа").matches(/^[a-zA-Z0-9]+$/, "Только латинские буквы и цифры").required("Введите логин"),
     password: yup.string().min(6, "Минимум 6 символов").required("Введите пароль"),
     confirmPassword: yup.string()
@@ -36,13 +37,14 @@ const RegisterPageModule: React.FC = () => {
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = async (data: { fullName: string; login: string; password: string; email: string }) => {
+    const onSubmit = async (data: { fullName: string; login: string; password: string; email: string; phone: string }) => {
         try {
             const response = await api.post(ApiRoutes.POST_SIGN_UP, {
                 login: data.login,
                 password: data.password,
                 fullName: data.fullName,
-                email: data.email
+                email: data.email,
+                phone: data.phone
             });
 
             const token = response.data.token;
@@ -92,6 +94,13 @@ const RegisterPageModule: React.FC = () => {
                             {...register("email")}
                             error={!!errors.email}
                             helperText={errors.email?.message}
+                        />
+
+                        <TextField
+                            label={t("phone")}
+                            {...register("phone")}
+                            error={!!errors.phone}
+                            helperText={errors.phone?.message}
                         />
 
                         <TextField

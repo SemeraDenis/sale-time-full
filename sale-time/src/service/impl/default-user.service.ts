@@ -21,6 +21,10 @@ export class DefaultUserService implements UserService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
+  async getById(id: number): Promise<User|null> {
+    return await this.usersRepository.findOne({ where: { id } });
+  }
+
   async signUp(dto: SignUpRequestDto): Promise<User> {
     const existUser = await this.usersRepository.findOne({
       where: { login: dto.login },

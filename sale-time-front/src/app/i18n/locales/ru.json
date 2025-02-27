@@ -9,6 +9,7 @@
   "logout": "Выйти",
   "registerPageTitle": "Регистрация",
   "email": "E-mail",
+  "phone": "Номер телефона",
   "fullName": "Имя",
   "authPageTitle": "Авторизация",
   "login": "Логин",
@@ -31,5 +32,6 @@
   "create-post-images": "Загрузить изображения",
   "create-post-do-create": "СОЗДАТЬ",
   "my-posts": "Мои объявления",
-  "description": "Описание"
+  "description": "Описание",
+  "seller_info": "Продавец"
 }
