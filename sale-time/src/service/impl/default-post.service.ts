@@ -1,15 +1,16 @@
-import { PostService } from '../post.service';
-import {Inject, Injectable} from '@nestjs/common';
+import { Inject, Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, ILike} from 'typeorm';
+import { PostService } from '../post.service';
+import { S3Service } from "../../s3/s3.service";
+import { PostImageService } from "../post-image.service";
 import { Post, PostState } from '../../entity/post.entity';
 import { CreatePostRequestDto } from '../../dto/create-post.dto';
 import { PostEntityBuilder } from '../../mapper/post-entity-builder';
 import { CommonNotfoundException } from '../../errors/exceptions/common.notfound-exception';
-import { PagedPostListFilterModel } from '../../model/post-get-filter.model';
 import { CommonForbiddenException } from '../../errors/exceptions/common.forbidden-exception';
-import {S3Service} from "../../s3/s3.service";
-import {PostImageService} from "../post-image.service";
+import { PagedPostListFilterModel } from '../../model/post-get-filter.model';
+
 
 @Injectable()
 export class DefaultPostService implements PostService {
@@ -40,8 +41,8 @@ export class DefaultPostService implements PostService {
       if (images.length > 0) {
         await Promise.all(
             images.map(async (file) => {
-              const fileName = await this.s3Service.uploadFile(file);
-              await this.postImageService.saveImagesInfo(postEntity, fileName);
+              const uploadInfo = await this.s3Service.uploadFile(file);
+              await this.postImageService.saveImagesInfo(postEntity, uploadInfo.key, uploadInfo.mimeType, uploadInfo.size);
             })
         );
       }

@@ -13,9 +13,7 @@ export class ImagesController {
     @Get('post-image/:id')
     async getPostImage(@Param('id') id: number,
                        @Res() res: Response):Promise<void>{
-        console.log('hello');
         const postImage = await this.postImageService.getImageInfo(id);
-        console.log(postImage.location);
         await this.s3Service.downloadFile(postImage.location, res);
     }
 }

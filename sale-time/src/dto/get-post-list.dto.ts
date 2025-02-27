@@ -3,24 +3,25 @@ export class PostListFilterRequestDto{
   category: number;
 }
 
-export class PostListResponseDto {
+export class PreviewPostListDto {
   totalCount: number;
   totalPageCount: number;
-  posts: PostInfoResponseDto[];
+  posts: PostPreviewDto [];
 }
 
-export class PostInfoResponseDto {
+export class PostPreviewDto  {
   id: number;
   published: Date;
   title: string;
   price: number;
-  previewUrl: string;
+  previewImg: number;
 }
 
-export class PostDetailsResponseDto {
+export class PostSummaryDto {
+  id: number;
+  published: Date;
   title: string;
-  description: string;
   price: number;
-  created: Date;
+  description: string;
   images: number[];
 }

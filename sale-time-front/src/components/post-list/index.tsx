@@ -18,7 +18,7 @@ interface PostInfo {
     title: string;
     description: string;
     price: number;
-    previewUrl: string;
+    previewImg: number;
 }
 
 interface PostListSectionProps {
@@ -87,18 +87,27 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category }) =>
                                 <CardContent>
                                     <Box display="flex">
                                         {/* Превью изображения */}
-                                        <Box
-                                            component="img"
-                                            src={post.previewUrl}
-                                            alt={post.title}
-                                            sx={{
-                                                width: 120,
-                                                height: 100,
-                                                objectFit: "cover",
-                                                borderRadius: 1,
-                                                mr: 2,
-                                            }}
-                                        />
+                                        {post.previewImg ? (
+                                            <Box
+                                                component="img"
+                                                src={ApiRoutes.GET_POST_IMAGE(post.previewImg)}
+                                                alt={post.title}
+                                                sx={{
+                                                    width: 120,
+                                                    height: 100,
+                                                    objectFit: "cover",
+                                                    borderRadius: 1,
+                                                    mr: 2,
+                                                }}
+                                            />
+                                        ) : (
+                                            <Skeleton
+                                                variant="rectangular"
+                                                width={120}
+                                                height={100}
+                                                sx={{ borderRadius: 1, mr: 2 }}
+                                            />
+                                        )}
 
                                         {/* Контент */}
                                         <Box display="flex" flexDirection="column" flex={1} justifyContent="space-between">

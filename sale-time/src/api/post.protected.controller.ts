@@ -15,6 +15,7 @@ export class PostProtectedController {
     @Inject('PostService') private readonly postService: PostService,
   ) {}
 
+  //Создание поста
   @Post('create')
   @UseInterceptors(FilesInterceptor('images'))
   async create(
@@ -30,6 +31,7 @@ export class PostProtectedController {
     res.status(201).json({ message: 'Post successfully created' });
   }
 
+  //Получение списка обявлений текущего пользователя
   @Get('get-posts/:page')
   @ApiOperation({ summary: 'Get user posts' })
   @ApiResponse({ status: 200, description: 'User post list.' })
@@ -44,6 +46,7 @@ export class PostProtectedController {
     return await this.postService.getPosts(filterParam);
   }
 
+  //Изменение статуса поста
   @Post('change-status')
   @ApiOperation({ summary: 'Change post state' })
   @ApiResponse({ status: 200, description: 'Post successfully created.' })

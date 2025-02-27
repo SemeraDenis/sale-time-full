@@ -19,11 +19,15 @@ export class MinioService implements S3Service {
                 accessKeyId: MinioConstants.ACCESS_KEY,
                 secretAccessKey: MinioConstants.ACCESS_KEY_SECRET,
             },
-            forcePathStyle: true, // Обязательно для MinIO
+            forcePathStyle: true,
         });
     }
 
-    async uploadFile(file: Express.Multer.File) {
+    async uploadFile(file: Express.Multer.File): Promise<{
+        key: string;
+        mimeType: string;
+        size: number;
+    }> {
         const fileKey = `${uuid()}-${file.originalname}`;
         console.log(file);
 
@@ -36,7 +40,11 @@ export class MinioService implements S3Service {
             })
         );
 
-        return fileKey;
+        return {
+            key: fileKey,
+            mimeType: file.mimetype,
+            size: file.size
+        };
     }
 
     async downloadFile(fileKey: string, res: Response) {

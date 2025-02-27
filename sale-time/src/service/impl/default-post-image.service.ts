@@ -13,19 +13,23 @@ export class DefaultPostImageService implements PostImageService {
         @InjectRepository(PostImage) private readonly postImageRepository: Repository<PostImage>, // <-- Инжектим репозиторий
     ) {}
 
-    async saveImagesInfo(post: Post, s3urls: string[]): Promise<void> {
-        const imageEntities = s3urls.map(s3url => {
-            const entity = new PostImage();
-            entity.location = s3url;
-            entity.postId = post.id; // Используем id поста
-            return entity;
-        });
+    //Сохранение данных о загруженном файле в хранилище S3
+    async saveImagesInfo(post: Post, s3FileKey: string, mimeType: string, size: number): Promise<void> {
+        const entity = new PostImage();
+        entity.location = s3FileKey;
+        entity.mimeType = mimeType;
+        entity.size = size;
+        entity.postId = post.id; // id поста, к которому относится файл
 
-        await this.postImageRepository.save(imageEntities); // Сохраняем сразу все
+        await this.postImageRepository.save(entity);
     }
 
+    //Получение информации о всех файлах поста
+    async getPostImagesInfo(post: Post): Promise<PostImage[]> {
+        return await this.postImageRepository.find({ where: { postId: post.id } });
+    }
 
-
+    //Получение информации о файле
     async getImageInfo(postImageId: number): Promise<PostImage> {
         if (!postImageId)
             throw new CommonNotfoundException('Incorrect params');
@@ -35,9 +39,5 @@ export class DefaultPostImageService implements PostImageService {
             throw new CommonNotfoundException('Image not found');
 
         return info;
-    }
-
-    async getAllImageInfo(post: Post): Promise<PostImage[]> {
-        return  await this.postImageRepository.find({ where: { postId: post.id } });
     }
 }

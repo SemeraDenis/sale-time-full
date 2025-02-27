@@ -8,4 +8,10 @@ export class PostImage extends PersistentEntity {
 
     @Column()
     location: string;
+
+    @Column()
+    mimeType: string;
+
+    @Column()
+    size: number;
 }
