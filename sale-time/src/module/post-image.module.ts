@@ -2,9 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostImage } from '../entity/post-image.entity';
 import { DefaultPostImageService } from '../service/impl/default-post-image.service';
+import { ImagesController } from '../api/images.controller';
+import { S3Module } from "./s3.module";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([PostImage])],
+    imports: [
+        TypeOrmModule.forFeature([PostImage]),
+        S3Module],
     providers: [
         {
             provide: 'PostImageService',
@@ -12,6 +16,7 @@ import { DefaultPostImageService } from '../service/impl/default-post-image.serv
         },
         DefaultPostImageService,
     ],
-    exports: ['PostImageService', TypeOrmModule], // Экспортируем для использования в других модулях
+    controllers: [ImagesController],
+    exports: ['PostImageService', TypeOrmModule, DefaultPostImageService],
 })
 export class PostImageModule {}

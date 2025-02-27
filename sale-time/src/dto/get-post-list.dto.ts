@@ -16,10 +16,11 @@ export class PostInfoResponseDto {
   price: number;
   previewUrl: string;
 }
+
 export class PostDetailsResponseDto {
   title: string;
   description: string;
   price: number;
   created: Date;
-  images: string[];
+  images: number[];
 }

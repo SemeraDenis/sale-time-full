@@ -6,13 +6,13 @@ import { PostProtectedController } from '../api/post.protected.controller';
 import { JwtAuthRequiredMiddleware } from '../middleware/auth-required.middleware';
 import { UsersModule } from './user.module';
 import { PostCategory } from '../entity/product-category.entity';
-import {MinioService} from "../s3/impl/minio.service";
 import {DefaultPostImageService} from "../service/impl/default-post-image.service";
 import {PostImageModule} from "./post-image.module";
+import {S3Module} from "./s3.module";
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, PostCategory]), UsersModule, PostImageModule],
+  imports: [TypeOrmModule.forFeature([Post, PostCategory]), UsersModule, PostImageModule, S3Module],
   providers: [
     {
       provide: 'PostService',
@@ -20,10 +20,9 @@ import {PostImageModule} from "./post-image.module";
     },
     DefaultPostService,
     DefaultPostImageService,
-    MinioService
   ],
   controllers: [PostProtectedController],
-  exports: [MinioService]
+  exports: ['PostService']
 })
 
 export class PostProtectedModule {

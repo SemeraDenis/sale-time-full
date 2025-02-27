@@ -13,7 +13,7 @@ interface PostDetails {
     title: string;
     description: string;
     price: number;
-    images: string[];
+    images: number[];
 }
 
 const PostDetails = () => {
@@ -44,7 +44,7 @@ const PostDetails = () => {
                             {post.images && post.images.length > 0 && (
                                 <CardMedia
                                     component="img"
-                                    image={post.images[0]}
+                                    image={ApiRoutes.GET_POST_IMAGE(post.images[0])}
                                     alt={post.title}
                                     sx={{
                                         width: "100%",

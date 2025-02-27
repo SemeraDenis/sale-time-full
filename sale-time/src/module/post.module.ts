@@ -8,15 +8,16 @@ import { UsersModule } from './user.module';
 
 import {DictionaryModule} from "./category.module";
 import {DefaultPostImageService} from "../service/impl/default-post-image.service";
-import {MinioService} from "../s3/impl/minio.service";
 import {PostImageModule} from "./post-image.module";
+import {S3Module} from "./s3.module";
 
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, PostCategory]),
     UsersModule,
     DictionaryModule,
-    PostImageModule],
+    PostImageModule,
+    S3Module],
   providers: [
     {
       provide: 'PostService',
@@ -24,7 +25,6 @@ import {PostImageModule} from "./post-image.module";
     },
     DefaultPostService,
     DefaultPostImageService,
-    MinioService
   ],
   controllers: [PostController],
   exports: [DefaultPostService],

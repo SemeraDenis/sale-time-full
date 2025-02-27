@@ -10,15 +10,15 @@ import { PagedPostListFilterModel } from '../../model/post-get-filter.model';
 import { CommonForbiddenException } from '../../errors/exceptions/common.forbidden-exception';
 import {S3Service} from "../../s3/s3.service";
 import {PostImageService} from "../post-image.service";
-import {MinioService} from "../../s3/impl/minio.service";
 
 @Injectable()
 export class DefaultPostService implements PostService {
   constructor(
       private readonly dataSource: DataSource,
       @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
-      @Inject('PostImageService') private readonly postImageService: PostImageService, // Теперь будет найден
-      private readonly s3Service: MinioService,
+
+      @Inject('PostImageService') private readonly postImageService: PostImageService,
+      @Inject('S3Service') private readonly s3Service: S3Service,
   ) {}
 
   async create(currentUserId: number, dto: CreatePostRequestDto, images: Express.Multer.File[]): Promise<void> {
@@ -36,12 +36,14 @@ export class DefaultPostService implements PostService {
       //Сохраняем для получения id
       await queryRunner.manager.save(postEntity);
 
+      // Загружаем в MinIO
       if (images.length > 0) {
-        const imageUrls = await Promise.all(
-            images.map(file => this.s3Service.uploadFile(file)) // Загружаем в MinIO
+        await Promise.all(
+            images.map(async (file) => {
+              const fileName = await this.s3Service.uploadFile(file);
+              await this.postImageService.saveImagesInfo(postEntity, fileName);
+            })
         );
-
-        await this.postImageService.saveImages(postEntity, imageUrls); // Сохраняем ссылки в БД
       }
 
       await queryRunner.commitTransaction();
