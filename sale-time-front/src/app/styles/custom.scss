@@ -3,6 +3,9 @@
 @import "text-variables";
 @import "variables";
 
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
 html {
     min-block-size: 100vh;
     scroll-behavior: smooth;
@@ -49,4 +52,11 @@ html {
     justify-content: flex-start;
     gap: 20px;
     padding: 10px 0 20px;
+}
+
+
+.slick-prev::before,
+.slick-next::before {
+    color: black;
+    text-shadow: 0 0 5px white, 0 0 10px white;
 }

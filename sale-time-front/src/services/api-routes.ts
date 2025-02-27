@@ -9,7 +9,7 @@ class ApiRoutes {
     static readonly GET_POST_DETAILS = (id: string | number) => `/post-details/${id}`;
     static readonly POST_CREATE = `/protected/posts/create`;
 
-    static readonly GET_POST_IMAGE =(id: number) => `${API_BASE_URL}/images/post-image/${id}`;
+    static readonly GET_POST_IMAGE_URL =(id: number) => `${API_BASE_URL}/images/post-image/${id}`;
 }
 
 export default ApiRoutes;

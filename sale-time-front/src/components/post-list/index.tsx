@@ -90,7 +90,7 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category }) =>
                                         {post.previewImg ? (
                                             <Box
                                                 component="img"
-                                                src={ApiRoutes.GET_POST_IMAGE(post.previewImg)}
+                                                src={ApiRoutes.GET_POST_IMAGE_URL(post.previewImg)}
                                                 alt={post.title}
                                                 sx={{
                                                     width: 120,
