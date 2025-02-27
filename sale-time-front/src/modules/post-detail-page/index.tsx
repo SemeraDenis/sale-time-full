@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 interface PostDetails {
     id: number;
-    created: Date;
+    published: Date;
     title: string;
     description: string;
     price: number;
@@ -74,7 +74,7 @@ const PostDetails = () => {
                         <Grid item xs={12} md={4}>
                             <CardContent>
                                 <Typography sx={{ fontSize: "0.750rem", color: "gray", padding: "5px 0 5px 0" }}>
-                                    {t("published")} {new Date(post.created).toLocaleDateString("ru-RU")}
+                                    {t("published")} {new Date(post.published).toLocaleDateString("ru-RU")}
                                 </Typography>
                                 <Typography variant="h4">{post.title}</Typography>
                                 <Typography variant="h6" color="primary">

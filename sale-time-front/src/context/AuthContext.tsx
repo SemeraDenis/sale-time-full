@@ -13,14 +13,16 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-    const token = Cookies.get("token");
+    const cookieTitle = process.env.REACT_APP_COOKIE_TOKEN || 'st-auth-token';
+
+    const token = Cookies.get(cookieTitle);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!token);
 
     const [user, setUser] = useState<{ username: string } | null>(() => parseToken(token));
 
     const login = (token: string) => {
         console.log(token);
-        Cookies.set("token", token, { secure: true, sameSite: "strict" });
+        Cookies.set(cookieTitle, token, { secure: true, sameSite: "strict" });
 
         setUser(parseToken(token));
         setIsAuthenticated(true);
@@ -44,7 +46,7 @@ const parseToken = (token: string | undefined): { username: string } | null => {
     if (!token) return null;
 
     try {
-        const tokenData = jwtDecode<{ fullName: string }>(token); // ✅ Используем безопасное декодирование
+        const tokenData = jwtDecode<{ fullName: string }>(token);
         return { username: tokenData.fullName };
     } catch (e) {
         console.error("Ошибка декодирования токена", e);

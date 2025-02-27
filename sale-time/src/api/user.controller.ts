@@ -4,7 +4,6 @@ import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../service/user.service';
 import { SignUpRequestDto } from '../dto/sign-up.dto';
 import { SignInRequestDto } from '../dto/sign-in.dto';
-import { JwtContainerUtils } from '../utils/jwtContainerUtils';
 import { JwtUserUtils } from '../utils/jwt-user.utils';
 import { ChangePasswordRequestDto } from '../dto/change-password.dto';
 import {signJWT} from "../utils/jwt.utils";
