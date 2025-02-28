@@ -1,14 +1,16 @@
-import { Controller, Body, Req, Res, Get, Post, Inject, Param } from '@nestjs/common';
+import {Controller, Body, Req, Res, Get, Post, Inject, Param, UseGuards} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../service/user.service';
 import { SignUpRequestDto } from '../dto/sign-up.dto';
 import { SignInRequestDto } from '../dto/sign-in.dto';
-import { JwtUserUtils } from '../utils/jwt-user.utils';
 import { ChangePasswordRequestDto } from '../dto/change-password.dto';
-import {signJWT} from "../utils/jwt.utils";
-import {User} from "../entity/user.entity";
+import { signJWT } from "../utils/jwt.utils";
+import { User } from "../entity/user.entity";
 import {CommonUnauthorizedException} from "../errors/exceptions/common.unauthorized-exception";
+import {JwtUserInfo} from "../model/jwt-user-info.model";
+import {CurrentUser} from "../auth/current-user.decorator";
+import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
 
 @Controller()
 export class UserController {
@@ -17,18 +19,21 @@ export class UserController {
   ) {}
 
   @Get('/auth-me')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Validate token and return user info' })
   @ApiResponse({ status: 200, description: 'Token is valid, user info returned.' })
   @ApiResponse({ status: 401, description: 'Unauthorized: Invalid or missing token.' })
   async validateToken(
-      @Req() request: Request
+      @Req() request: Request,
+      @CurrentUser() currentUser: JwtUserInfo
   ): Promise<{ id: number; fullName: string }>{
-    const user = JwtUserUtils.getUserInfo(request);
-    if (!user) {
+    console.log(request.user);
+
+    if (!currentUser) {
       throw new CommonUnauthorizedException('Invalid or missing token');
     }
 
-    return { id: user.id, fullName: user.fullName };
+    return { id: currentUser.id, fullName: currentUser.fullName };
   }
 
   @Post('sign-up')
@@ -79,13 +84,6 @@ export class UserController {
     this.sendAuthResponse(userEntity,res);
   }
 
-  @Get('profile-info')
-  @ApiOperation({ summary: 'Profile info' })
-  @ApiResponse({ status: 200, description: 'Profile info.' })
-  async profileInfo(@Req() request: Request): Promise<string> {
-    return JwtUserUtils.getUserInfo(request).fullName;
-  }
-
   @Post('change-password')
   @ApiOperation({ summary: 'Change password' })
   @ApiResponse({ status: 200, description: 'User password successfully changed.' })
@@ -104,7 +102,8 @@ export class UserController {
       },
     },
   })
-  async changePassword(@Body() request: ChangePasswordRequestDto, @Res() res: Response): Promise<void> {
+  async changePassword(@Body() request: ChangePasswordRequestDto,
+                       @Res() res: Response): Promise<void> {
     await this.userService.changePassword(request);
     res.status(200).json({message: 'Change password successfully.'});
   }

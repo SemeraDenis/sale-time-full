@@ -4,8 +4,9 @@ import { UsersModule } from './user.module';
 import { PostModule } from './post.module';
 import { OfferModule } from './offer.protected.module';
 import { PostProtectedModule } from './post.protected.module';
-import { JwtDecodeMiddleware } from '../middleware/jwt-decode.middleware';
 import {DictionaryModule} from "./category.module";
+import {AuthModule} from "../auth/auth.module";
+import {ConfigModule} from "@nestjs/config";
 
 
 
@@ -25,13 +26,13 @@ import {DictionaryModule} from "./category.module";
     PostModule,
     PostProtectedModule,
     OfferModule,
-    DictionaryModule
+    DictionaryModule,
+    ConfigModule.forRoot({ isGlobal: true }), // Подключаем глобально
+    AuthModule,
   ],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(JwtDecodeMiddleware)
-      .forRoutes('*');
+
   }
 }

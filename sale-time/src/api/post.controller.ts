@@ -23,8 +23,8 @@ import {PostDtoMapper} from "../mapper/post-info-response.mapper";
 import {CommonBadRequestException} from "../errors/exceptions/common.badrequest-exception";
 import {CommonNotfoundException} from "../errors/exceptions/common.notfound-exception";
 import {Request} from "express";
-import {JwtUserUtils} from "../utils/jwt-user.utils";
 import {PostStatus} from "../common/enums/post-status.enum";
+import {JwtUserInfo} from "../model/jwt-user-info.model";
 
 
 
@@ -50,7 +50,7 @@ export class PostController {
     const pageSize= 10;
     const filterParamBuilder = new PagedPostListFilterModelBuilder();
     if (filterDto.currentUserOnly) {
-      const currentUserId = JwtUserUtils.getUserInfo(req).id;
+      const currentUserId = (req.user as JwtUserInfo).id;
       filterParamBuilder.withUserId(currentUserId);
     } else {
       filterParamBuilder.withStatus(PostStatus.ACTIVE);

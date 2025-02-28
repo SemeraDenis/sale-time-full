@@ -9,17 +9,17 @@ import {
   Get,
   UseInterceptors,
   UploadedFiles,
-  Put, Delete
+  Put, Delete, UseGuards
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreatePostRequestDto } from '../dto/create-post.dto';
 import { PostService } from '../service/post.service';
-import { JwtUserUtils } from '../utils/jwt-user.utils';
-import { ChangePostStateRequestDto } from '../dto/change-post-state.dto';
 import {ChangePostRequestDto, ChangeStatusPostRequestDto, PostEditableDataInfoDto} from "../dto/get-post-list.dto";
-import {PostStatus} from "../common/enums/post-status.enum";
+import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
+import {JwtUserInfo} from "../model/jwt-user-info.model";
+import {CurrentUser} from "../auth/current-user.decorator";
 
 @Controller('protected/posts')
 export class PostProtectedController {
@@ -29,27 +29,27 @@ export class PostProtectedController {
 
   //Создание поста
   @Post('create')
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FilesInterceptor('images'))
   async create(
       @Body() request: CreatePostRequestDto,
       @UploadedFiles() images: Express.Multer.File[],
-      @Req() req: Request,
+      @CurrentUser() currentUser: JwtUserInfo,
       @Res() res: Response,
   ): Promise<void> {
 
-    const userId = JwtUserUtils.getUserInfo(req).id;
-    await this.postService.create(userId, request, images);
+    await this.postService.create(currentUser.id, request, images);
 
     res.status(201).json({ message: 'Post successfully created' });
   }
 
   @Get('getPostForEdit/:id')
+  @UseGuards(JwtAuthGuard)
   async getPostForEdit(
       @Param('id') id: number,
-      @Req() req: Request):Promise<PostEditableDataInfoDto>{
+      @CurrentUser() currentUser: JwtUserInfo):Promise<PostEditableDataInfoDto>{
 
-    const currentUserId = JwtUserUtils.getUserInfo(req).id;
-    const post = await this.postService.findPostForOwner(id, currentUserId);
+    const post = await this.postService.findPostForOwner(id, currentUser.id);
 
     const resultDto = new PostEditableDataInfoDto();
     resultDto.price = post.price;
@@ -61,39 +61,39 @@ export class PostProtectedController {
   }
 
   @Put('update/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update post details' })
   @ApiResponse({ status: 200, description: 'Post successfully updated.' })
   async updatePost(
       @Param('id') id: number,
       @Body() updateDto: ChangePostRequestDto,
-      @Req() req: Request,
+      @CurrentUser() currentUser: JwtUserInfo,
   ){
-    const currentUserId = JwtUserUtils.getUserInfo(req).id;
-    await this.postService.updatePost(id, currentUserId, updateDto);
+    await this.postService.updatePost(id, currentUser.id, updateDto);
   }
 
   //Изменение статуса поста
   @Put('change-status/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Change post state' })
   @ApiResponse({ status: 200, description: 'Status successfully changed.' })
   async changeState(
       @Param('id') id: number,
       @Body() dto: ChangeStatusPostRequestDto,
-      @Req() req: Request): Promise<void> {
+      @CurrentUser() currentUser: JwtUserInfo,): Promise<void> {
 
-    const userId = JwtUserUtils.getUserInfo(req).id;
-    await this.postService.changeStatus(id, userId, dto.status);
+    await this.postService.changeStatus(id, currentUser.id, dto.status);
   }
 
   //Удаление поста
   @Delete('delete/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete post' })
   @ApiResponse({ status: 200, description: 'Post successfully deleted.' })
   async deletePost(
       @Param('id') id: number,
-      @Req() req: Request): Promise<void> {
+      @CurrentUser() currentUser: JwtUserInfo): Promise<void> {
 
-    const userId = JwtUserUtils.getUserInfo(req).id;
-    await this.postService.delete(id, userId);
+    await this.postService.delete(id, currentUser.id);
   }
 }

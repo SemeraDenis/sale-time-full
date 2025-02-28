@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const SECRET_KEY = process.env.JWT_SECRET;
+const SECRET_KEY = process.env.JWT_SECRET || 'default_secret';
 
 export function signJWT(payload: any) {
   return jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
