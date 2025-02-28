@@ -1,13 +1,8 @@
-import { Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { PersistentEntity } from './base/persistent-entity';
-import { PostCategory } from './product-category.entity';
-import { User } from './user.entity';
+import {PostStatus} from "../common/enums/post-status.enum";
 
-export enum PostState {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  DELETED = 'DELETED',
-}
+
 
 @Entity('Posts')
 export class Post extends PersistentEntity {
@@ -23,8 +18,8 @@ export class Post extends PersistentEntity {
   @Column()
   ownerId: number;
 
-  @Column({ type: 'enum', enum: PostState, default: PostState.ACTIVE })
-  status: PostState;
+  @Column({ type: 'enum', enum: PostStatus, default: PostStatus.ACTIVE })
+  status: PostStatus;
 
   @Column()
   categoryId: number;

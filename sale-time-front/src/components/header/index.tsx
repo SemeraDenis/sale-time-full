@@ -65,7 +65,7 @@ const TopSection = () => {
                                     sx={{ cursor: "pointer" }}
                                     onClick={handleMenuOpen}
                                 >
-                                    {user.username}
+                                    {user.fullName}
                                     <ArrowDropDownIcon sx={{ verticalAlign: "middle" }} />
                                 </Typography>
                                 <Menu
@@ -74,7 +74,7 @@ const TopSection = () => {
                                     onClose={handleMenuClose}
                                     sx={{ mt: 1 }}
                                 >
-                                    <MenuItem disabled>{user.username}</MenuItem>
+                                    <MenuItem disabled>{user.fullName}</MenuItem>
                                     <MenuItem onClick={() => navigate("/my-posts")}>{t("my-posts")}</MenuItem>
                                     <MenuItem onClick={handleLogout}>{t("logout")}</MenuItem>
                                 </Menu>

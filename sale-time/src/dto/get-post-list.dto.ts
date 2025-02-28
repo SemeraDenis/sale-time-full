@@ -1,3 +1,5 @@
+import {PostStatus} from "../common/enums/post-status.enum";
+
 export class PostListFilterRequestDto{
   query: string;
   category: number;
@@ -12,6 +14,7 @@ export class PreviewPostListDto {
 
 export class PostPreviewDto  {
   id: number;
+  status: PostStatus;
   published: Date;
   title: string;
   price: number;

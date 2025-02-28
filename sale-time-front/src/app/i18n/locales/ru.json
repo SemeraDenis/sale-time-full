@@ -34,6 +34,13 @@
   "description": "Описание",
   "seller_info": "Продавец",
 
+  "post-action": {
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "activate": "Активировать",
+    "deactivate": "Деактивировать"
+  },
+
   "create-post-actions": {
     "create-title": "Создание объявления",
     "edit-title": "Изменение объявления",

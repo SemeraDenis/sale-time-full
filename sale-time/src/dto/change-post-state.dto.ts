@@ -1,6 +1,6 @@
-import { PostState } from '../entity/post.entity';
+import {PostStatus} from "../common/enums/post-status.enum";
 
 export class ChangePostStateRequestDto{
   postId: number;
-  state: PostState;
+  state: PostStatus;
 }

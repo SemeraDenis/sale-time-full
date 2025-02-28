@@ -16,6 +16,7 @@ export class PostDtoMapper {
     const dto = new PostPreviewDto();
 
     dto.id = entity.id;
+    dto.status = entity.status;
     dto.published = entity.created;
     dto.title = entity.title;
     dto.price = entity.price;

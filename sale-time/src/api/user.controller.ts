@@ -8,12 +8,28 @@ import { JwtUserUtils } from '../utils/jwt-user.utils';
 import { ChangePasswordRequestDto } from '../dto/change-password.dto';
 import {signJWT} from "../utils/jwt.utils";
 import {User} from "../entity/user.entity";
+import {CommonUnauthorizedException} from "../errors/exceptions/common.unauthorized-exception";
 
 @Controller()
 export class UserController {
   constructor(
     @Inject('UserService') private readonly userService: UserService,
   ) {}
+
+  @Get('/auth-me')
+  @ApiOperation({ summary: 'Validate token and return user info' })
+  @ApiResponse({ status: 200, description: 'Token is valid, user info returned.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized: Invalid or missing token.' })
+  async validateToken(
+      @Req() request: Request
+  ): Promise<{ id: number; fullName: string }>{
+    const user = JwtUserUtils.getUserInfo(request);
+    if (!user) {
+      throw new CommonUnauthorizedException('Invalid or missing token');
+    }
+
+    return { id: user.id, fullName: user.fullName };
+  }
 
   @Post('sign-up')
   @ApiOperation({ summary: 'User registration' })

@@ -9,17 +9,17 @@ import {
   Get,
   UseInterceptors,
   UploadedFiles,
-  Put
+  Put, Delete
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreatePostRequestDto } from '../dto/create-post.dto';
 import { PostService } from '../service/post.service';
 import { JwtUserUtils } from '../utils/jwt-user.utils';
-import { PostState } from '../entity/post.entity';
 import { ChangePostStateRequestDto } from '../dto/change-post-state.dto';
 import {ChangePostRequestDto, PostEditableDataInfoDto} from "../dto/get-post-list.dto";
+import {PostStatus} from "../common/enums/post-status.enum";
 
 @Controller('protected/posts')
 export class PostProtectedController {
@@ -73,14 +73,27 @@ export class PostProtectedController {
   }
 
   //Изменение статуса поста
-  @Post('change-status')
+  @Put('change-status')
   @ApiOperation({ summary: 'Change post state' })
-  @ApiResponse({ status: 200, description: 'Post successfully created.' })
+  @ApiResponse({ status: 200, description: 'Status successfully changed.' })
   async changeState(
-    @Body() request: ChangePostStateRequestDto,
-    @Req() req: Request): Promise<void> {
+      @Param('id') id: number,
+      @Body() newStatus: PostStatus,
+      @Req() req: Request): Promise<void> {
 
     const userId = JwtUserUtils.getUserInfo(req).id;
-    await this.postService.changeState(request.postId, userId, request.state);
+    await this.postService.changeStatus(id, userId, newStatus);
+  }
+
+  //Удаление поста
+  @Delete('delete')
+  @ApiOperation({ summary: 'Delete post' })
+  @ApiResponse({ status: 200, description: 'Post successfully deleted.' })
+  async deletePost(
+      @Param('id') id: number,
+      @Req() req: Request): Promise<void> {
+
+    const userId = JwtUserUtils.getUserInfo(req).id;
+    await this.postService.delete(id, userId);
   }
 }

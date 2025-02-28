@@ -5,6 +5,8 @@ import api from "../../services/api";
 import { Button, Container, Box, Typography, Stack, Pagination, Card, CardContent, CardActions, Skeleton } from "@mui/material";
 import ApiRoutes from "../../services/api-routes";
 import {PostListFilterBuilder} from "../../mapper/post-list-filter.builder";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface PostsInfoResponse {
     totalCount: number;
@@ -14,11 +16,18 @@ interface PostsInfoResponse {
 
 interface PostInfo {
     id: number;
+    status: PostStatus;
     published: Date;
     title: string;
     price: number;
     previewImg: number;
 }
+
+enum PostStatus {
+    Active = "ACTIVE",
+    Inactive = "INACTIVE",
+}
+
 
 interface PostListSectionProps {
     query: string;
@@ -61,6 +70,23 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, only
             .catch((error) => console.error("Ошибка загрузки объявлений:", error))
             .finally(() => setLoading(false));
     }, [page, query, category]);
+
+    const handleStatusChange = async (postId: number, newStatus: PostStatus) => {
+        try {
+            await api.put(ApiRoutes.PUT_UPDATE_POST_STATUS(postId), { status: newStatus });
+            alert(`Статус изменен на ${newStatus}`);
+        } catch (error) {
+            console.error("Ошибка при изменении статуса:", error);
+        }
+    };
+    const handleDelete = async (postId: number) => {
+        try {
+            await api.delete(ApiRoutes.DELETE_POST(postId));
+            alert(`Пост удален`);
+        } catch (error) {
+            console.error("Ошибка при изменении статуса:", error);
+        }
+    };
 
     return (
         <Container>
@@ -124,12 +150,7 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, only
                                                     {new Intl.NumberFormat("ru-RU").format(post.price)} ₸
                                                 </Typography>
                                             </Box>
-
-                                            {/* Растягивающийся контейнер, чтобы дата ушла вниз */}
                                             <Box flexGrow={1} />
-
-
-                                            {/* Нижний блок: дата создания */}
                                             <Typography variant="caption" color="text.secondary" sx={{ alignSelf: "flex-start", mt: 1 }}>
                                                 {new Date(post.published).toLocaleDateString("ru-RU")}
                                             </Typography>
@@ -138,8 +159,15 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, only
                                 </CardContent>
                                 {onlyUserPosts && (
                                     <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-                                        <Button size="small" color="primary" onClick={() => navigate(`/edit-post/${post.id}`)}>Редактировать</Button>
-                                        <Button size="small" color="error">Удалить</Button>
+                                        {post.status == PostStatus.Inactive && (
+                                            <><Button size="small" color="secondary" startIcon={<EditIcon />} onClick={() => handleStatusChange(post.id, PostStatus.Active)}>{t('post-action.activate')}</Button></>
+                                        )}
+                                        {post.status == PostStatus.Active && (
+                                            <Button size="small" color="secondary" startIcon={<EditIcon />} onClick={() => handleStatusChange(post.id, PostStatus.Inactive)}>{t('post-action.deactivate')}</Button>
+                                        )}
+
+                                        <Button size="small" color="primary" startIcon={<EditIcon />} onClick={() => navigate(`/edit-post/${post.id}`)}>{t('post-action.edit')}</Button>
+                                        <Button size="small" color="error" startIcon={<DeleteIcon />} onClick={()=>handleDelete(post.id)}>{t('post-action.delete')}</Button>
                                     </CardActions>
                                 )}
                             </Card>

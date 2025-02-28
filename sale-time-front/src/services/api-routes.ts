@@ -1,6 +1,8 @@
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
 
 class ApiRoutes {
+    static readonly VALIDATE_TOKEN = "/auth-me";
+
     static readonly POST_SIGN_IN = "/sign-in";
     static readonly POST_SIGN_UP = "/sign-up";
 
@@ -11,6 +13,8 @@ class ApiRoutes {
     static readonly POST_CREATE = () =>`${this.protectedPostsControllerUrl}/create`;
     static readonly GET_POST_DETAILS_FOR_EDIT = (id: string | number) => `${this.protectedPostsControllerUrl}/getPostForEdit/${id}`;
     static readonly PUT_POST_EDIT= (id: number) => `${this.protectedPostsControllerUrl}/update/${id}`;
+    static readonly PUT_UPDATE_POST_STATUS= (id: number) => `${this.protectedPostsControllerUrl}/change-status/${id}`;
+    static readonly DELETE_POST= (id: number) => `${this.protectedPostsControllerUrl}/delete/${id}`;
 
     static readonly GET_POST_IMAGE_URL =(id: number) => `${API_BASE_URL}/images/post-image/${id}`;
 

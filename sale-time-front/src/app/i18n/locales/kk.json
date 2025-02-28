@@ -34,8 +34,15 @@
   "description": "[KZ] Описание",
   "seller_info": "[KZ] Продавец",
 
+  "post-action": {
+    "edit": "[KZ] Редактировать",
+    "delete": "[KZ] Удалить",
+    "activate": "[KZ] Активировать",
+    "deactivate": "[KZ] Деактивировать"
+  },
+
   "create-post-actions": {
-    "create-title": "[KZ]Создание объявления",
+    "create-title": "[KZ] Создание объявления",
     "edit-title": "[KZ] Изменение объявления",
     "do-create": "[KZ] Создать объявление",
     "do-change": "[KZ] Сохранить изменения"

@@ -46,6 +46,13 @@
   "description": "Description",
   "seller_info": "Seller",
 
+  "post-action": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "activate": "Activate",
+    "deactivate": "Deactivate"
+  },
+
   "create-post-actions": {
     "create-title": "Create post",
     "edit-title": "Changes",

@@ -1,18 +1,19 @@
-import { Inject, Injectable} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository, ILike} from 'typeorm';
+import {Inject, Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {DataSource, ILike, Repository, Not} from 'typeorm';
 
-import { PostService } from '../post.service';
-import { S3Service } from "../../s3/s3.service";
-import { PostImageService } from "../post-image.service";
+import {PostService} from '../post.service';
+import {S3Service} from "../../s3/s3.service";
+import {PostImageService} from "../post-image.service";
 
-import { Post, PostState } from '../../entity/post.entity';
-import { PostEntityBuilder } from '../../mapper/post-entity-builder';
-import { CommonNotfoundException } from '../../errors/exceptions/common.notfound-exception';
-import { CommonForbiddenException } from '../../errors/exceptions/common.forbidden-exception';
+import {Post} from '../../entity/post.entity';
+import {PostEntityBuilder} from '../../mapper/post-entity-builder';
+import {CommonNotfoundException} from '../../errors/exceptions/common.notfound-exception';
+import {CommonForbiddenException} from '../../errors/exceptions/common.forbidden-exception';
 
-import { PagedPostListFilterModel } from '../../model/post-get-filter.model';
-import { CreatePostRequestDto } from '../../dto/create-post.dto';
+import {PostStatus} from "../../common/enums/post-status.enum";
+import {PagedPostListFilterModel} from '../../model/post-get-filter.model';
+import {CreatePostRequestDto} from '../../dto/create-post.dto';
 import {ChangePostRequestDto} from "../../dto/get-post-list.dto";
 
 
@@ -25,6 +26,10 @@ export class DefaultPostService implements PostService {
       @Inject('PostImageService') private readonly postImageService: PostImageService,
       @Inject('S3Service') private readonly s3Service: S3Service,
   ) {}
+
+  //region interface PostService
+
+  //region CUD operations
 
   async create(currentUserId: number, dto: CreatePostRequestDto, images: Express.Multer.File[]): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -63,11 +68,46 @@ export class DefaultPostService implements PostService {
     }
   }
 
+  async updatePost(id: number, ownerId: number, dto: ChangePostRequestDto): Promise<void> {
+    const post = await this.findPostForOwner(id, ownerId);
+
+    post.title = dto.title;
+    post.description = dto.description;
+    post.price = dto.price;
+
+    await this.postsRepository.save(post);
+  }
+
+  async delete(id: number, ownerId: number): Promise<void> {
+    const post = await this.findPostForOwner(id, ownerId);
+
+    post.status = PostStatus.DELETED;
+    await this.postsRepository.save(post);
+  }
+
+  //endregion
+
+  //region Read operations
+
+  async getById(id: number): Promise<Post> {
+    return await this.getPostByIdOrThrow(id);
+  }
+
+  async findPostForOwner(id: number, ownerId: number): Promise<Post> {
+    const post = await this.getPostByIdOrThrow(id);
+
+    if (post.ownerId != ownerId) {
+      throw new CommonForbiddenException('Post is not available');
+    }
+
+    return post;
+  }
+
   async getPosts(filter: PagedPostListFilterModel): Promise<{ totalCount: number, records: Post[] }> {
     const pageSize: number = filter.pageSize;
     const skip: number = (filter.page - 1) * pageSize;
 
-    const whereCondition: any = {};
+    const whereCondition: any = this.excludeDeletedPosts();
     if (filter.category) {
       whereCondition.categoryId = filter.category;
     }
@@ -77,7 +117,7 @@ export class DefaultPostService implements PostService {
     }
 
     if (filter.userId && filter.userId > 0){
-        whereCondition.ownerId = filter.userId;
+      whereCondition.ownerId = filter.userId;
     }
 
     const countRecords = this.postsRepository.countBy(whereCondition);
@@ -94,42 +134,35 @@ export class DefaultPostService implements PostService {
     return {totalCount, records};
   }
 
+  //endregion
 
-  async getById(id: number): Promise<Post> {
-    return await this.getPostByIdOrThrow(id);
-  }
-  async findPostForOwner(id: number, ownerId: number): Promise<Post> {
-    const post = await this.getPostByIdOrThrow(id);
+  //region other operations
 
-    if (post.ownerId != ownerId) {
-      throw new CommonForbiddenException('Post is not available');
-    }
-
-    return post;
-  }
-
-  async changeState(id: number, ownerId: number, status: PostState): Promise<void> {
+  async changeStatus(id: number, ownerId: number, status: PostStatus): Promise<void> {
     const post = await this.findPostForOwner(id, ownerId);
 
     post.status = status;
     await this.postsRepository.save(post);
   }
 
+  //endregion
+
+  //endregion
+
+  //region private
+
   private async getPostByIdOrThrow(id: number): Promise<Post> {
-    const post = await this.postsRepository.findOne({ where: { id } });
+    const post = await this.postsRepository.findOne(this.excludeDeletedPosts({ where: { id } }));
     if (!post)
       throw new CommonNotfoundException('Post not found');
 
     return post;
   }
 
-  async updatePost(id: number, ownerId: number, dto: ChangePostRequestDto): Promise<void> {
-    const post = await this.findPostForOwner(id, ownerId);
-
-    post.title = dto.title;
-    post.description = dto.description;
-    post.price = dto.price;
-
-    await this.postsRepository.save(post);
+  private excludeDeletedPosts(whereCondition: Record<string, any> = {}): Record<string, any> {
+    whereCondition.status = Not(PostStatus.DELETED);
+    return whereCondition;
   }
+
+  //endregion
 }
