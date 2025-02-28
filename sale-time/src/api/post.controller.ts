@@ -24,6 +24,7 @@ import {CommonBadRequestException} from "../errors/exceptions/common.badrequest-
 import {CommonNotfoundException} from "../errors/exceptions/common.notfound-exception";
 import {Request} from "express";
 import {JwtUserUtils} from "../utils/jwt-user.utils";
+import {PostStatus} from "../common/enums/post-status.enum";
 
 
 
@@ -48,9 +49,11 @@ export class PostController {
 
     const pageSize= 10;
     const filterParamBuilder = new PagedPostListFilterModelBuilder();
-    if (filterDto?.currentUser != null && filterDto.currentUser) {
+    if (filterDto.currentUserOnly) {
       const currentUserId = JwtUserUtils.getUserInfo(req).id;
       filterParamBuilder.withUserId(currentUserId);
+    } else {
+      filterParamBuilder.withStatus(PostStatus.ACTIVE);
     }
 
     const filterParam = filterParamBuilder.withPage(page)

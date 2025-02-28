@@ -18,7 +18,7 @@ import { CreatePostRequestDto } from '../dto/create-post.dto';
 import { PostService } from '../service/post.service';
 import { JwtUserUtils } from '../utils/jwt-user.utils';
 import { ChangePostStateRequestDto } from '../dto/change-post-state.dto';
-import {ChangePostRequestDto, PostEditableDataInfoDto} from "../dto/get-post-list.dto";
+import {ChangePostRequestDto, ChangeStatusPostRequestDto, PostEditableDataInfoDto} from "../dto/get-post-list.dto";
 import {PostStatus} from "../common/enums/post-status.enum";
 
 @Controller('protected/posts')
@@ -73,20 +73,20 @@ export class PostProtectedController {
   }
 
   //Изменение статуса поста
-  @Put('change-status')
+  @Put('change-status/:id')
   @ApiOperation({ summary: 'Change post state' })
   @ApiResponse({ status: 200, description: 'Status successfully changed.' })
   async changeState(
       @Param('id') id: number,
-      @Body() newStatus: PostStatus,
+      @Body() dto: ChangeStatusPostRequestDto,
       @Req() req: Request): Promise<void> {
 
     const userId = JwtUserUtils.getUserInfo(req).id;
-    await this.postService.changeStatus(id, userId, newStatus);
+    await this.postService.changeStatus(id, userId, dto.status);
   }
 
   //Удаление поста
-  @Delete('delete')
+  @Delete('delete/:id')
   @ApiOperation({ summary: 'Delete post' })
   @ApiResponse({ status: 200, description: 'Post successfully deleted.' })
   async deletePost(

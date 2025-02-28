@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import api from "../../services/api";
@@ -32,10 +32,10 @@ enum PostStatus {
 interface PostListSectionProps {
     query: string;
     category: number | null;
-    onlyUserPosts: boolean
+    currentUserPostsOnly: boolean
 }
 
-const PostListSection: React.FC<PostListSectionProps> = ({ query, category, onlyUserPosts }) => {
+const PostListSection: React.FC<PostListSectionProps> = ({ query, category, currentUserPostsOnly }) => {
     const [postsInfo, setPostsInfo] = useState<PostsInfoResponse>();
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -43,38 +43,35 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, only
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    useEffect(() => {
+    const fetchPosts = useCallback(() => {
+        setLoading(true);
         window.scrollTo({ top: 0, behavior: "smooth" });
+
         const filterBuilder = new PostListFilterBuilder();
 
-        if (query) {
-            filterBuilder.withQuery(query);
-        }
-
-        if (category){
-            filterBuilder.withCategory(category);
-        }
-
-        if (onlyUserPosts != null){
-            filterBuilder.withForCurrentUser(onlyUserPosts);
-        }
+        if (query) filterBuilder.withQuery(query);
+        if (category) filterBuilder.withCategory(category);
+        if (currentUserPostsOnly != null) filterBuilder.withForCurrentUser(currentUserPostsOnly);
 
         const filter = filterBuilder.getResult();
+
         api.post<PostsInfoResponse>(ApiRoutes.POST_GET_POST_LIST_PAGED(`${page}`), filter)
-            .then(
-                (response) => {
-                    setPostsInfo(response.data);
-                    setPageCount(response.data.totalPageCount);
-                }
-            )
+            .then((response) => {
+                setPostsInfo(response.data);
+                setPageCount(response.data.totalPageCount);
+            })
             .catch((error) => console.error("Ошибка загрузки объявлений:", error))
             .finally(() => setLoading(false));
-    }, [page, query, category]);
+    }, [query, category, currentUserPostsOnly, page]); // Добавляем зависимости
+
+    useEffect(() => {
+        fetchPosts();
+    }, [fetchPosts]);
 
     const handleStatusChange = async (postId: number, newStatus: PostStatus) => {
         try {
             await api.put(ApiRoutes.PUT_UPDATE_POST_STATUS(postId), { status: newStatus });
-            alert(`Статус изменен на ${newStatus}`);
+            fetchPosts();
         } catch (error) {
             console.error("Ошибка при изменении статуса:", error);
         }
@@ -82,7 +79,7 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, only
     const handleDelete = async (postId: number) => {
         try {
             await api.delete(ApiRoutes.DELETE_POST(postId));
-            alert(`Пост удален`);
+            fetchPosts();
         } catch (error) {
             console.error("Ошибка при изменении статуса:", error);
         }
@@ -157,7 +154,7 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, only
                                         </Box>
                                     </Box>
                                 </CardContent>
-                                {onlyUserPosts && (
+                                {currentUserPostsOnly && (
                                     <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
                                         {post.status == PostStatus.Inactive && (
                                             <><Button size="small" color="secondary" startIcon={<EditIcon />} onClick={() => handleStatusChange(post.id, PostStatus.Active)}>{t('post-action.activate')}</Button></>

@@ -1,9 +1,12 @@
+import {PostStatus} from "../common/enums/post-status.enum";
+
 export class PagedPostListFilterModel {
   page: number;
   pageSize: number;
   title: string;
   userId: number;
   category: number;
+  status?: PostStatus;
 }
 
 export class PagedPostListFilterModelBuilder{
@@ -51,6 +54,11 @@ export class PagedPostListFilterModelBuilder{
       this.model.userId = id;
     }
 
+    return this;
+  }
+
+  withStatus(postStatus: PostStatus): PagedPostListFilterModelBuilder {
+    this.model.status = postStatus;
     return this;
   }
 

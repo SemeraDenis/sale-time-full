@@ -120,6 +120,10 @@ export class DefaultPostService implements PostService {
       whereCondition.ownerId = filter.userId;
     }
 
+    if (filter.status){
+      whereCondition.status = filter.status;
+    }
+
     const countRecords = this.postsRepository.countBy(whereCondition);
     const resultRecords = this.postsRepository.find({
       where: whereCondition,

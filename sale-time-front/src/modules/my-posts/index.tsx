@@ -20,7 +20,7 @@ const MyPostsModule: React.FC = () => {
                         {t('my_posts.description')}
                     </Typography>
                 </Box>
-                <PostListSection query={""} category={null} onlyUserPosts={true} />
+                <PostListSection query={""} category={null} currentUserPostsOnly={true} />
             </Container>
             <Footer />
         </>

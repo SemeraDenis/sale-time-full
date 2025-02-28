@@ -1,7 +1,7 @@
 interface PostListFilter {
     query?: string;
     category?: number;
-    currentUser: boolean
+    currentUserOnly: boolean
 }
 
 export class PostListFilterBuilder {
@@ -9,7 +9,7 @@ export class PostListFilterBuilder {
 
     constructor() {
         this._filter = {
-            currentUser: false
+            currentUserOnly: false
         };
     }
 
@@ -23,8 +23,8 @@ export class PostListFilterBuilder {
         return this;
     }
 
-    withForCurrentUser(onlyUserPosts:boolean): PostListFilterBuilder {
-        this._filter.currentUser = onlyUserPosts;
+    withForCurrentUser(currentUserOnly:boolean): PostListFilterBuilder {
+        this._filter.currentUserOnly = currentUserOnly;
         return this;
     }
 

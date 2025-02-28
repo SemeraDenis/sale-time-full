@@ -3,7 +3,7 @@ import {PostStatus} from "../common/enums/post-status.enum";
 export class PostListFilterRequestDto{
   query: string;
   category: number;
-  currentUser?: boolean;
+  currentUserOnly: boolean = false;
 }
 
 export class PreviewPostListDto {
@@ -31,6 +31,9 @@ export class ChangePostRequestDto  {
   title: string;
   description: string;
   price: number;
+}
+export class ChangeStatusPostRequestDto  {
+  status: PostStatus;
 }
 
 export class PostSummaryDto {
