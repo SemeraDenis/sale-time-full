@@ -4,7 +4,7 @@ import { UsersModule } from './user.module';
 import { PostModule } from './post.module';
 import { OfferModule } from './offer.protected.module';
 import { PostProtectedModule } from './post.protected.module';
-import { JwtAuthenticationMiddleware } from '../middleware/jwt-auth.middleware';
+import { JwtDecodeMiddleware } from '../middleware/jwt-decode.middleware';
 import {DictionaryModule} from "./category.module";
 
 
@@ -31,7 +31,7 @@ import {DictionaryModule} from "./category.module";
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(JwtAuthenticationMiddleware)
+      .apply(JwtDecodeMiddleware)
       .forRoutes('*');
   }
 }

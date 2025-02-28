@@ -4,7 +4,7 @@ import { verifyJWT } from '../utils/jwt.utils';
 import { JwtUserUtils } from '../utils/jwt-user.utils';
 
 @Injectable()
-export class JwtAuthenticationMiddleware implements NestMiddleware {
+export class JwtDecodeMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     try {
       const authHeader = req.headers.authorization;
