@@ -7,15 +7,17 @@ import { PostProtectedModule } from './post.protected.module';
 import { JwtAuthenticationMiddleware } from '../middleware/jwt-auth.middleware';
 import {DictionaryModule} from "./category.module";
 
+
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'pwd',
-      database: 'sale_time_db',
+      host: process.env.POSTGRES_HOST || 'localhost',
+      port: Number(process.env.POSTGRES_PORT) || 5432,
+      username: process.env.POSTGRES_USERNAME || 'default',
+      password: process.env.POSTGRES_PWD || 'default',
+      database: process.env.POSTGRES_DB || 'default',
       autoLoadEntities: true,
       synchronize: true,
     }),
