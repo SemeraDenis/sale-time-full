@@ -87,9 +87,10 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, only
                             <Card
                                 key={post.id}
                                 variant="outlined"
-                                onClick={() => navigate(`/post-details/${post.id}`)}
                                 sx={{ cursor: "pointer" }}>
-                                <CardContent>
+                                <CardContent
+                                    onClick={() => navigate(`/post-details/${post.id}`)}
+                                >
                                     <Box display="flex">
                                         {/* Превью изображения */}
                                         {post.previewImg ? (
@@ -135,6 +136,12 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, only
                                         </Box>
                                     </Box>
                                 </CardContent>
+                                {onlyUserPosts && (
+                                    <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+                                        <Button size="small" color="primary" onClick={() => navigate(`/edit-post/${post.id}`)}>Редактировать</Button>
+                                        <Button size="small" color="error">Удалить</Button>
+                                    </CardActions>
+                                )}
                             </Card>
                         ))}
                     </Stack>

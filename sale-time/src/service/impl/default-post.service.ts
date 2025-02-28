@@ -1,15 +1,19 @@
 import { Inject, Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, ILike} from 'typeorm';
+
 import { PostService } from '../post.service';
 import { S3Service } from "../../s3/s3.service";
 import { PostImageService } from "../post-image.service";
+
 import { Post, PostState } from '../../entity/post.entity';
-import { CreatePostRequestDto } from '../../dto/create-post.dto';
 import { PostEntityBuilder } from '../../mapper/post-entity-builder';
 import { CommonNotfoundException } from '../../errors/exceptions/common.notfound-exception';
 import { CommonForbiddenException } from '../../errors/exceptions/common.forbidden-exception';
+
 import { PagedPostListFilterModel } from '../../model/post-get-filter.model';
+import { CreatePostRequestDto } from '../../dto/create-post.dto';
+import {ChangePostRequestDto} from "../../dto/get-post-list.dto";
 
 
 @Injectable()
@@ -91,15 +95,21 @@ export class DefaultPostService implements PostService {
   }
 
 
-  async details(id: number): Promise<Post> {
+  async getById(id: number): Promise<Post> {
     return await this.getPostByIdOrThrow(id);
   }
+  async findPostForOwner(id: number, ownerId: number): Promise<Post> {
+    const post = await this.getPostByIdOrThrow(id);
 
-  async changeState(id: number, currentUserId: number, status: PostState): Promise<void> {
-    let post = await this.getPostByIdOrThrow(id);
-
-    if (post.ownerId != currentUserId)
+    if (post.ownerId != ownerId) {
       throw new CommonForbiddenException('Post is not available');
+    }
+
+    return post;
+  }
+
+  async changeState(id: number, ownerId: number, status: PostState): Promise<void> {
+    const post = await this.findPostForOwner(id, ownerId);
 
     post.status = status;
     await this.postsRepository.save(post);
@@ -111,5 +121,15 @@ export class DefaultPostService implements PostService {
       throw new CommonNotfoundException('Post not found');
 
     return post;
+  }
+
+  async updatePost(id: number, ownerId: number, dto: ChangePostRequestDto): Promise<void> {
+    const post = await this.findPostForOwner(id, ownerId);
+
+    post.title = dto.title;
+    post.description = dto.description;
+    post.price = dto.price;
+
+    await this.postsRepository.save(post);
   }
 }

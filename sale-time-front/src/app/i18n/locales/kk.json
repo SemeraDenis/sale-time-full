@@ -30,11 +30,16 @@
   "create-post-description": "[KZ] Описание",
   "create-post-price": "[KZ] Цена",
   "create-post-images": "[KZ] Загрузить изображения",
-  "create-post-do-create": "[KZ] СОЗДАТЬ",
   "my-posts": "[KZ] Мои объявления",
   "description": "[KZ] Описание",
   "seller_info": "[KZ] Продавец",
 
+  "create-post-actions": {
+    "create-title": "[KZ]Создание объявления",
+    "edit-title": "[KZ] Изменение объявления",
+    "do-create": "[KZ] Создать объявление",
+    "do-change": "[KZ] Сохранить изменения"
+  },
   "my_posts": {
     "title": "[KZ] Мои объявления",
     "description": "[KZ] Здесь отображаются все ваши опубликованные объявления."

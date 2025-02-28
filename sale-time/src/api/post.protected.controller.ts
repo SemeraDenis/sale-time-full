@@ -1,13 +1,25 @@
-import { Body, Req, Res, Controller, Inject, Post, Param, Get, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import {
+  Body,
+  Req,
+  Res,
+  Controller,
+  Inject,
+  Post,
+  Param,
+  Get,
+  UseInterceptors,
+  UploadedFiles,
+  Put
+} from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreatePostRequestDto } from '../dto/create-post.dto';
 import { PostService } from '../service/post.service';
 import { JwtUserUtils } from '../utils/jwt-user.utils';
-import { PagedPostListFilterModelBuilder } from '../model/post-get-filter.model';
 import { PostState } from '../entity/post.entity';
 import { ChangePostStateRequestDto } from '../dto/change-post-state.dto';
+import {ChangePostRequestDto, PostEditableDataInfoDto} from "../dto/get-post-list.dto";
 
 @Controller('protected/posts')
 export class PostProtectedController {
@@ -31,23 +43,39 @@ export class PostProtectedController {
     res.status(201).json({ message: 'Post successfully created' });
   }
 
+  @Get('getPostForEdit/:id')
+  async getPostForEdit(
+      @Param('id') id: number,
+      @Req() req: Request):Promise<PostEditableDataInfoDto>{
+
+    const currentUserId = JwtUserUtils.getUserInfo(req).id;
+    const post = await this.postService.findPostForOwner(id, currentUserId);
+
+    const resultDto = new PostEditableDataInfoDto();
+    resultDto.price = post.price;
+    resultDto.title = post.title;
+    resultDto.description = post.description;
+    resultDto.category = post.categoryId;
+
+    return resultDto;
+  }
+
+  @Put('update/:id')
+  @ApiOperation({ summary: 'Update post details' })
+  @ApiResponse({ status: 200, description: 'Post successfully updated.' })
+  async updatePost(
+      @Param('id') id: number,
+      @Body() updateDto: ChangePostRequestDto,
+      @Req() req: Request,
+  ){
+    const currentUserId = JwtUserUtils.getUserInfo(req).id;
+    await this.postService.updatePost(id, currentUserId, updateDto);
+  }
+
   //Изменение статуса поста
   @Post('change-status')
   @ApiOperation({ summary: 'Change post state' })
   @ApiResponse({ status: 200, description: 'Post successfully created.' })
-  @ApiBody({
-    description: 'Request body for change post state',
-    type: ChangePostStateRequestDto,
-    examples: {
-      example1: {
-        summary: 'Valid request',
-        value: {
-          postId: '35',
-          state: PostState.INACTIVE,
-        },
-      },
-    },
-  })
   async changeState(
     @Body() request: ChangePostStateRequestDto,
     @Req() req: Request): Promise<void> {

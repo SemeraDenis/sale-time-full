@@ -76,7 +76,7 @@ export class PostController {
     if (id < 1)
       throw new CommonBadRequestException('incorrect parameter');
 
-    const post = await this.postService.details(id);
+    const post = await this.postService.getById(id);
     if (!post)
       throw new CommonNotfoundException('Post not found');
 

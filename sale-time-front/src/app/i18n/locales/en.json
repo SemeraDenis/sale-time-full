@@ -46,6 +46,12 @@
   "description": "Description",
   "seller_info": "Seller",
 
+  "create-post-actions": {
+    "create-title": "Create post",
+    "edit-title": "Changes",
+    "do-create": "Create post",
+    "do-change": "Save changes"
+  },
   "my_posts": {
     "title": "My Posts",
     "description": "Here you can see all your published posts."

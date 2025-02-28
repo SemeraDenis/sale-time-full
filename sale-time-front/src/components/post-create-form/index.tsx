@@ -18,8 +18,8 @@ interface PostFormData {
     title: string;
     description: string;
     price: number;
-    images: (File | null)[];
     category: number;
+    images: (File | null)[];
 }
 
 interface PostFormProps {
@@ -43,7 +43,7 @@ const schema = yup.object({
 
 
 
-const PostCreateForm: React.FC<PostFormProps> = ({ initialValues, isEditMode = false }) => {
+const PostCreateForm: React.FC<PostFormProps> = ({ initialValues }) => {
     const { t } = useTranslation();
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedImages, setSelectedImages] = useState<(File | null)[]>(initialValues?.images || Array(5).fill(null));
@@ -98,7 +98,7 @@ const PostCreateForm: React.FC<PostFormProps> = ({ initialValues, isEditMode = f
 
             console.log("Отправка данных", formData);
 
-            await api.post(ApiRoutes.POST_CREATE, formData, {
+            await api.post(ApiRoutes.POST_CREATE(), formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -119,7 +119,7 @@ const PostCreateForm: React.FC<PostFormProps> = ({ initialValues, isEditMode = f
                 component="form"
                 onSubmit={handleSubmit(onSubmit)}
                  sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
-                <Typography variant="h4" textAlign="center">Создание объявления</Typography>
+                <Typography variant="h4" textAlign="center">{t("create-post-actions.create-title")}</Typography>
 
                 <TextField
                     label={t("create-post-title")}
@@ -199,7 +199,8 @@ const PostCreateForm: React.FC<PostFormProps> = ({ initialValues, isEditMode = f
                         {errorMessage}
                     </Typography>
                 )}
-                <Button type="submit" variant="contained" color="primary">{t("create-post-do-create")}</Button>
+
+                <Button type="submit" variant="contained" color="primary">{t("create-post-actions.do-change")}</Button>
             </Box>
         </Container>
     );

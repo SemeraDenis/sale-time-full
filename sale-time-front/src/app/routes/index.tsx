@@ -10,12 +10,14 @@ import SignUpPage from "./pages/sign-up-page";
 import PostDetailsPage from "./pages/post-details";
 import CreatePostPage from "./pages/create-post-page";
 import MyPostsPage from "./pages/my-posts-page";
+import EditPostPage from "./pages/edit-post-page";
 
 const routes = [
     {path: '/', element: <MainPage/>},
     {path: '/auth', element: <AuthPage/>},
     {path: '/sign-up', element: <SignUpPage/>},
     {path: '/create-post', element: <CreatePostPage/>},
+    {path: '/edit-post/:id', element: <EditPostPage/>},
     {path: '/post-details/:id', element: <PostDetailsPage/>},
     {path: '/my-posts', element: <MyPostsPage/>},
     {path: '/ui-kits', element: <UIKitsPage/>},

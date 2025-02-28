@@ -27,7 +27,7 @@ import ApiRoutes from "../../services/api-routes";
 // Валидация
 const schema = yup.object().shape({
     login: yup.string().required("Введите логин"),
-    password: yup.string().min(6, "Минимум 6 символов").required("Введите пароль"),
+    password: yup.string().required("Введите пароль"),
 });
 
 // Стили для карточки

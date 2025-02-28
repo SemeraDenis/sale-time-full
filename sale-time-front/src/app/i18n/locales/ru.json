@@ -30,11 +30,16 @@
   "create-post-description": "Описание",
   "create-post-price": "Цена",
   "create-post-images": "Загрузить изображения",
-  "create-post-do-create": "СОЗДАТЬ",
   "my-posts": "Мои объявления",
   "description": "Описание",
   "seller_info": "Продавец",
 
+  "create-post-actions": {
+    "create-title": "Создание объявления",
+    "edit-title": "Изменение объявления",
+    "do-create": "Создать объявление",
+    "do-change": "Сохранить изменения"
+  },
   "my_posts": {
     "title": "Мои объявления",
     "description": "Здесь отображаются все ваши опубликованные объявления."

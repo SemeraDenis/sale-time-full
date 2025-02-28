@@ -18,6 +18,18 @@ export class PostPreviewDto  {
   previewImg: number;
 }
 
+export class PostEditableDataInfoDto  {
+  title: string;
+  description: string;
+  price: number;
+  category: number;
+}
+export class ChangePostRequestDto  {
+  title: string;
+  description: string;
+  price: number;
+}
+
 export class PostSummaryDto {
   id: number;
   published: Date;
