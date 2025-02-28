@@ -9,6 +9,7 @@ import AuthPage from './pages/auth-page';
 import SignUpPage from "./pages/sign-up-page";
 import PostDetailsPage from "./pages/post-details";
 import CreatePostPage from "./pages/create-post-page";
+import MyPostsPage from "./pages/my-posts-page";
 
 const routes = [
     {path: '/', element: <MainPage/>},
@@ -16,6 +17,7 @@ const routes = [
     {path: '/sign-up', element: <SignUpPage/>},
     {path: '/create-post', element: <CreatePostPage/>},
     {path: '/post-details/:id', element: <PostDetailsPage/>},
+    {path: '/my-posts', element: <MyPostsPage/>},
     {path: '/ui-kits', element: <UIKitsPage/>},
     {path: '*', element: <Navigate to="/" replace/>}
 ];

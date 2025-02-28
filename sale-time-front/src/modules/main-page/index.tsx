@@ -25,7 +25,7 @@ const MainPageModule: React.FC = () => {
             <Container maxWidth="md">
                 <SearchBar onSearch={handleSearch} />
                 <CategorySection onCategorySelect={handleCategoryChange}/>
-                <PostListSection query={query} category={selectedCategory}/>
+                <PostListSection query={query} category={selectedCategory} onlyUserPosts={false}/>
             </Container>
             <Footer />
         </Box>

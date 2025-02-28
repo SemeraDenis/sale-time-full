@@ -1,6 +1,7 @@
 export class PostListFilterRequestDto{
   query: string;
   category: number;
+  currentUser?: boolean;
 }
 
 export class PreviewPostListDto {

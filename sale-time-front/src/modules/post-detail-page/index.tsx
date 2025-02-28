@@ -54,7 +54,13 @@ const PostDetails = () => {
         <Box>
             <Header />
             <Container style={{ padding: '25px 0 0' }}>
+
                 <Card>
+                    <CardContent>
+                        <Typography variant="h4" fontWeight="bold" align="left">
+                            {post.title}
+                        </Typography>
+                    </CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={8}>
                             {post.images && post.images.length > 0 && (
@@ -83,7 +89,6 @@ const PostDetails = () => {
                                     <Typography sx={{ fontSize: "0.750rem", color: "gray", padding: "5px 0 5px 0" }}>
                                         {t("published")} {new Date(post.published).toLocaleDateString("ru-RU")}
                                     </Typography>
-                                    <Typography variant="h4">{post.title}</Typography>
                                     <Typography variant="h6" color="primary">
                                         {new Intl.NumberFormat("ru-RU").format(post.price)} ₸
                                     </Typography>

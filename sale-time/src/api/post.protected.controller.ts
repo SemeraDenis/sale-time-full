@@ -31,21 +31,6 @@ export class PostProtectedController {
     res.status(201).json({ message: 'Post successfully created' });
   }
 
-  //Получение списка обявлений текущего пользователя
-  @Get('get-posts/:page')
-  @ApiOperation({ summary: 'Get user posts' })
-  @ApiResponse({ status: 200, description: 'User post list.' })
-  async getPosts(@Req() req: Request,
-                 @Param('page') page: number){
-
-    const filterParam = new PagedPostListFilterModelBuilder()
-      .withPage(page)
-      .withUserId(JwtUserUtils.getUserInfo(req).id)
-      .getResult();
-
-    return await this.postService.getPosts(filterParam);
-  }
-
   //Изменение статуса поста
   @Post('change-status')
   @ApiOperation({ summary: 'Change post state' })

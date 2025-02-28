@@ -7,7 +7,7 @@ const CreatePostModule: React.FC = () => {
     return(
         <section>
             <Header />
-            <PostCreateForm />
+            <PostCreateForm isEditMode={false} />
             <Footer />
         </section>
     );

@@ -44,5 +44,10 @@
   "create-post-do-create": "CREATE",
   "my-posts": "My posts",
   "description": "Description",
-  "seller_info": "Seller"
+  "seller_info": "Seller",
+
+  "my_posts": {
+    "title": "My Posts",
+    "description": "Here you can see all your published posts."
+  }
 }

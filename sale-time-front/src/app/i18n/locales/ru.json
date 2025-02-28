@@ -33,5 +33,10 @@
   "create-post-do-create": "СОЗДАТЬ",
   "my-posts": "Мои объявления",
   "description": "Описание",
-  "seller_info": "Продавец"
+  "seller_info": "Продавец",
+
+  "my_posts": {
+    "title": "Мои объявления",
+    "description": "Здесь отображаются все ваши опубликованные объявления."
+  }
 }

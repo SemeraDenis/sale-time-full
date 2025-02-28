@@ -33,6 +33,11 @@
   "create-post-do-create": "[KZ] СОЗДАТЬ",
   "my-posts": "[KZ] Мои объявления",
   "description": "[KZ] Описание",
-  "seller_info": "[KZ] Продавец"
+  "seller_info": "[KZ] Продавец",
+
+  "my_posts": {
+    "title": "[KZ] Мои объявления",
+    "description": "[KZ] Здесь отображаются все ваши опубликованные объявления."
+  }
 
 }

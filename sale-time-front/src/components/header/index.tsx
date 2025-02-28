@@ -75,7 +75,7 @@ const TopSection = () => {
                                     sx={{ mt: 1 }}
                                 >
                                     <MenuItem disabled>{user.username}</MenuItem>
-                                    <MenuItem onClick={handleLogout}>{t("my-posts")}</MenuItem>
+                                    <MenuItem onClick={() => navigate("/my-posts")}>{t("my-posts")}</MenuItem>
                                     <MenuItem onClick={handleLogout}>{t("logout")}</MenuItem>
                                 </Menu>
                             </Box>

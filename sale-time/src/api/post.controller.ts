@@ -5,7 +5,7 @@ import {
   Post,
   Inject,
   Param,
-  HttpCode, HttpStatus
+  HttpCode, HttpStatus, Req
 } from '@nestjs/common';
 import { PostService } from '../service/post.service';
 import {PostImageService} from "../service/post-image.service";
@@ -22,6 +22,8 @@ import { PagedPostListFilterModelBuilder } from '../model/post-get-filter.model'
 import {PostDtoMapper} from "../mapper/post-info-response.mapper";
 import {CommonBadRequestException} from "../errors/exceptions/common.badrequest-exception";
 import {CommonNotfoundException} from "../errors/exceptions/common.notfound-exception";
+import {Request} from "express";
+import {JwtUserUtils} from "../utils/jwt-user.utils";
 
 
 
@@ -41,16 +43,21 @@ export class PostController {
   @ApiResponse({ status: 200, description: 'Posts info.' })
   async getAllPosts(
     @Param('page') page: number,
+    @Req() req: Request,
     @Body() filterDto: PostListFilterRequestDto): Promise<PreviewPostListDto> {
 
     const pageSize= 10;
-    const filterParam = new PagedPostListFilterModelBuilder()
-        .withPage(page)
+    const filterParamBuilder = new PagedPostListFilterModelBuilder();
+    if (filterDto?.currentUser != null && filterDto.currentUser) {
+      const currentUserId = JwtUserUtils.getUserInfo(req).id;
+      filterParamBuilder.withUserId(currentUserId);
+    }
+
+    const filterParam = filterParamBuilder.withPage(page)
         .withPageSize(pageSize)
         .withTitle(filterDto?.query)
         .withCategory(filterDto?.category)
         .getResult();
-
     const posts = await this.postService.getPosts(filterParam);
 
     const postMapper: PostDtoMapper = new PostDtoMapper(this.postImageService, this.userService);

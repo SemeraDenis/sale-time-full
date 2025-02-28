@@ -16,7 +16,6 @@ interface PostInfo {
     id: number;
     published: Date;
     title: string;
-    description: string;
     price: number;
     previewImg: number;
 }
@@ -24,9 +23,10 @@ interface PostInfo {
 interface PostListSectionProps {
     query: string;
     category: number | null;
+    onlyUserPosts: boolean
 }
 
-const PostListSection: React.FC<PostListSectionProps> = ({ query, category }) => {
+const PostListSection: React.FC<PostListSectionProps> = ({ query, category, onlyUserPosts }) => {
     const [postsInfo, setPostsInfo] = useState<PostsInfoResponse>();
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -37,12 +37,17 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category }) =>
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
         const filterBuilder = new PostListFilterBuilder();
+
         if (query) {
             filterBuilder.withQuery(query);
         }
 
         if (category){
             filterBuilder.withCategory(category);
+        }
+
+        if (onlyUserPosts != null){
+            filterBuilder.withForCurrentUser(onlyUserPosts);
         }
 
         const filter = filterBuilder.getResult();
@@ -135,9 +140,11 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category }) =>
                     </Stack>
                 )}
 
-                <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-                    <Pagination count={pageCount} page={page} onChange={(_, value) => setPage(value)} color="primary" />
-                </Box>
+                {(postsInfo?.totalCount ?? 0) > 0 && (
+                    <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+                        <Pagination count={pageCount} page={page} onChange={(_, value) => setPage(value)} color="primary" />
+                    </Box>
+                )}
             </Box>
         </Container>
     );

@@ -22,6 +22,11 @@ interface PostFormData {
     category: number;
 }
 
+interface PostFormProps {
+    initialValues?: PostFormData;
+    isEditMode?: boolean;
+}
+
 // Валидация
 const schema = yup.object({
     title: yup.string().required("Введите название"),
@@ -38,10 +43,10 @@ const schema = yup.object({
 
 
 
-const PostCreateForm = () => {
+const PostCreateForm: React.FC<PostFormProps> = ({ initialValues, isEditMode = false }) => {
     const { t } = useTranslation();
     const [categories, setCategories] = useState<Category[]>([]);
-    const [selectedImages, setSelectedImages] = useState<(File | null)[]>(Array(5).fill(null));
+    const [selectedImages, setSelectedImages] = useState<(File | null)[]>(initialValues?.images || Array(5).fill(null));
     const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
     const navigate = useNavigate();
 
@@ -53,6 +58,7 @@ const PostCreateForm = () => {
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<PostFormData>({
         resolver: yupResolver(schema) as Resolver<PostFormData>,
+        defaultValues: initialValues
     });
 
 
