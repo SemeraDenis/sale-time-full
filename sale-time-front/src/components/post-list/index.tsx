@@ -5,8 +5,8 @@ import api from "../../services/api";
 import { Button, Container, Box, Typography, Stack, Pagination, Card, CardContent, CardActions, Skeleton } from "@mui/material";
 import ApiRoutes from "../../services/api-routes";
 import {PostListFilterBuilder} from "../../mapper/post-list-filter.builder";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import PostActions from "../post-actions";
+import {PostStatus} from "../../types/post-status";
 
 interface PostsInfoResponse {
     totalCount: number;
@@ -22,12 +22,6 @@ interface PostInfo {
     price: number;
     previewImg: number;
 }
-
-enum PostStatus {
-    Active = "ACTIVE",
-    Inactive = "INACTIVE",
-}
-
 
 interface PostListSectionProps {
     query: string;
@@ -68,25 +62,6 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, curr
         fetchPosts();
     }, [fetchPosts]);
 
-    const handleStatusChange = async (postId: number, newStatus: PostStatus) => {
-        try {
-            await api.put(ApiRoutes.PUT_UPDATE_POST_STATUS(postId), { status: newStatus });
-            fetchPosts();
-        } catch (error) {
-            console.error("Ошибка при изменении статуса:", error);
-        }
-    };
-    const handleDelete = async (postId: number) => {
-        const isConfirmed = window.confirm(t('post-action.confirm-delete'));
-        if (!isConfirmed) return;
-
-        try {
-            await api.delete(ApiRoutes.DELETE_POST(postId));
-            fetchPosts();
-        } catch (error) {
-            console.error("Ошибка при изменении статуса:", error);
-        }
-    };
 
     return (
         <Container>
@@ -158,17 +133,11 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, curr
                                     </Box>
                                 </CardContent>
                                 {currentUserPostsOnly && (
-                                    <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-                                        {post.status == PostStatus.Inactive && (
-                                            <><Button size="small" color="secondary" startIcon={<EditIcon />} onClick={() => handleStatusChange(post.id, PostStatus.Active)}>{t('post-action.activate')}</Button></>
-                                        )}
-                                        {post.status == PostStatus.Active && (
-                                            <Button size="small" color="secondary" startIcon={<EditIcon />} onClick={() => handleStatusChange(post.id, PostStatus.Inactive)}>{t('post-action.deactivate')}</Button>
-                                        )}
-
-                                        <Button size="small" color="primary" startIcon={<EditIcon />} onClick={() => navigate(`/edit-post/${post.id}`)}>{t('post-action.edit')}</Button>
-                                        <Button size="small" color="error" startIcon={<DeleteIcon />} onClick={()=>handleDelete(post.id)}>{t('post-action.delete')}</Button>
-                                    </CardActions>
+                                    <PostActions
+                                        postId={post.id}
+                                        status={post.status}
+                                        fetchPosts={fetchPosts}
+                                    />
                                 )}
                             </Card>
                         ))}
