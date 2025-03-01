@@ -15,7 +15,7 @@ const MainPageModule: React.FC = () => {
         setQuery(searchQuery);
     };
 
-    const handleCategoryChange = (category: number) => {
+    const handleCategoryChange = (category: number | null) => {
         setSelectedCategory(category);
     };
 
