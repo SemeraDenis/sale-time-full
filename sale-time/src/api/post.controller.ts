@@ -5,7 +5,8 @@ import {
   Post,
   Inject,
   Param,
-  HttpCode, HttpStatus, Req
+  HttpCode, HttpStatus, Req,
+  UseGuards
 } from '@nestjs/common';
 import { PostService } from '../service/post.service';
 import {PostImageService} from "../service/post-image.service";
@@ -25,6 +26,10 @@ import {CommonNotfoundException} from "../errors/exceptions/common.notfound-exce
 import {Request} from "express";
 import {PostStatus} from "../common/enums/post-status.enum";
 import {JwtUserInfo} from "../model/jwt-user-info.model";
+import {CurrentUser} from "../auth/current-user.decorator";
+import {OptionalJwtAuthGuard} from "../auth/guards/optional-jwt-auth.guard";
+import {CommonUnauthorizedException} from "../errors/exceptions/common.unauthorized-exception";
+import {RequestWithUser} from "../auth/types/request-with-user";
 
 
 
@@ -39,19 +44,26 @@ export class PostController {
   }
 
   @Post('get-posts/:page')
+  @UseGuards(OptionalJwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get paged posts' })
   @ApiResponse({ status: 200, description: 'Posts info.' })
   async getAllPosts(
     @Param('page') page: number,
-    @Req() req: Request,
+    @CurrentUser() currentUser: JwtUserInfo | null,
     @Body() filterDto: PostListFilterRequestDto): Promise<PreviewPostListDto> {
 
     const pageSize= 10;
     const filterParamBuilder = new PagedPostListFilterModelBuilder();
     if (filterDto.currentUserOnly) {
-      const currentUserId = (req.user as JwtUserInfo).id;
-      filterParamBuilder.withUserId(currentUserId);
+      console.log('currentUser:')
+      console.log(currentUser);
+
+
+      if (!currentUser)
+        throw new CommonUnauthorizedException('Authorized user only');
+
+      filterParamBuilder.withUserId(currentUser.id);
     } else {
       filterParamBuilder.withStatus(PostStatus.ACTIVE);
     }

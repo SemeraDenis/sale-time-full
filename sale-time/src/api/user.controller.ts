@@ -27,8 +27,6 @@ export class UserController {
       @Req() request: Request,
       @CurrentUser() currentUser: JwtUserInfo
   ): Promise<{ id: number; fullName: string }>{
-    console.log(request.user);
-
     if (!currentUser) {
       throw new CommonUnauthorizedException('Invalid or missing token');
     }
