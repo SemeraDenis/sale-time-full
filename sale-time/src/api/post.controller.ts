@@ -23,13 +23,11 @@ import { PagedPostListFilterModelBuilder } from '../model/post-get-filter.model'
 import {PostDtoMapper} from "../mapper/post-info-response.mapper";
 import {CommonBadRequestException} from "../errors/exceptions/common.badrequest-exception";
 import {CommonNotfoundException} from "../errors/exceptions/common.notfound-exception";
-import {Request} from "express";
 import {PostStatus} from "../common/enums/post-status.enum";
 import {JwtUserInfo} from "../model/jwt-user-info.model";
 import {CurrentUser} from "../auth/current-user.decorator";
 import {OptionalJwtAuthGuard} from "../auth/guards/optional-jwt-auth.guard";
 import {CommonUnauthorizedException} from "../errors/exceptions/common.unauthorized-exception";
-import {RequestWithUser} from "../auth/types/request-with-user";
 
 
 
@@ -56,10 +54,6 @@ export class PostController {
     const pageSize= 10;
     const filterParamBuilder = new PagedPostListFilterModelBuilder();
     if (filterDto.currentUserOnly) {
-      console.log('currentUser:')
-      console.log(currentUser);
-
-
       if (!currentUser)
         throw new CommonUnauthorizedException('Authorized user only');
 
