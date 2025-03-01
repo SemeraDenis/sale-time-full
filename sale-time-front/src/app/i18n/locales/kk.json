@@ -36,6 +36,7 @@
   "seller_info": "[KZ] Продавец",
 
   "post-action": {
+    "confirm-delete": "[KZ] Вы уверены, что хотите удалить этот пост?",
     "edit": "[KZ] Редактировать",
     "delete": "[KZ] Удалить",
     "activate": "[KZ] Активировать",

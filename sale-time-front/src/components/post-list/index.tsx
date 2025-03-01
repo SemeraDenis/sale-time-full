@@ -77,6 +77,9 @@ const PostListSection: React.FC<PostListSectionProps> = ({ query, category, curr
         }
     };
     const handleDelete = async (postId: number) => {
+        const isConfirmed = window.confirm(t('post-action.confirm-delete'));
+        if (!isConfirmed) return;
+
         try {
             await api.delete(ApiRoutes.DELETE_POST(postId));
             fetchPosts();
